@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminSession, isAdminAccessCode } from "@/lib/admin";
+import { createJudgeSession, resolveJudgeByPasscode } from "@/lib/judges";
 
 export async function POST(request: Request) {
   try {
@@ -16,8 +17,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: true, ...createAdminSession() });
     }
 
+    const judge = resolveJudgeByPasscode(code);
+    if (judge) {
+      return NextResponse.json({ ok: true, ...createJudgeSession(judge) });
+    }
+
     return NextResponse.json(
-      { ok: false, error: "通行碼無效（目前僅開放管理者 admin 測試）" },
+      { ok: false, error: "通行碼無效" },
       { status: 401 }
     );
   } catch (e) {

@@ -102,3 +102,35 @@ export interface ScoringCriterion {
   label: string;
   weight: number;
 }
+
+export interface AdminDashboardRawScore {
+  judgeId: string;
+  scores: Record<string, number>;
+  weightedTotal: number;
+}
+
+export interface AdminDashboardRow {
+  entryId: string;
+  workTitle?: string;
+  category: EntryCategory;
+  thumbnailUrl: string | null;
+  displayRotation?: number;
+  scoreCompleted: number;
+  scoreTotal: number;
+  weightedAverage: number;
+  divergence: number;
+  scoreRank: number | null;
+  needsDiscussion: boolean;
+  rawScores: AdminDashboardRawScore[];
+}
+
+export interface AdminDashboardResponse {
+  ok: boolean;
+  error?: string;
+  rows?: AdminDashboardRow[];
+  meta?: {
+    expectedJudgeCount: number;
+    divergenceTopN: number;
+    topN: number;
+  };
+}

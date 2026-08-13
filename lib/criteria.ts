@@ -1,9 +1,9 @@
 import type { EntryCategory, ScoringCriterion } from "@/types/review";
 
 export const YOUTH_CRITERIA: ScoringCriterion[] = [
-  { key: "imagination", label: "充滿童趣的想像力", weight: 40 },
+  { key: "imagination", label: "充滿童趣的想像力", weight: 30 },
   { key: "environment", label: "對環境的關懷", weight: 30 },
-  { key: "spatial", label: "空間轉譯的潛力", weight: 30 },
+  { key: "spatial", label: "空間轉譯的潛力", weight: 40 },
 ];
 
 export const PROFESSIONAL_CRITERIA: ScoringCriterion[] = [

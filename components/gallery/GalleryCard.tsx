@@ -16,8 +16,8 @@ import {
   isQuotaExhaustedMessage,
   parseVoteApiResponse,
 } from "@/lib/vote-api";
-import { GALLERY_THUMB_WIDTH } from "@/lib/drive-thumbnail";
-import type { GalleryEntryWithVotes } from "@/types/gallery";
+import { GALLERY_THUMB_WIDTH, buildDriveFullImageProxyUrl } from "@/lib/drive-thumbnail";
+import type { GalleryEntryWithVotes, GalleryLightboxSelection } from "@/types/gallery";
 
 interface GalleryCardProps {
   entry: GalleryEntryWithVotes;
@@ -25,6 +25,7 @@ interface GalleryCardProps {
   displayConcept?: string;
   isTopTen?: boolean;
   onVoteCountChange?: (entryId: string, voteCount: number) => void;
+  onImageClick?: (selection: GalleryLightboxSelection) => void;
 }
 
 function excerpt(text: string, max = 160): string {
@@ -39,6 +40,7 @@ export default function GalleryCard({
   displayConcept,
   isTopTen = false,
   onVoteCountChange,
+  onImageClick,
 }: GalleryCardProps) {
   const { t, locale } = useLanguage();
   const categoryLabel = useCategoryLabel(entry.category);
@@ -143,30 +145,54 @@ export default function GalleryCard({
     recordVoteSuccess,
   ]);
 
+  const handleImageClick = useCallback(
+    (event: React.MouseEvent) => {
+      event.stopPropagation();
+      if (!hasThumbnail || !entry.fileId || !onImageClick) return;
+      onImageClick({
+        entryId: entry.entryId,
+        title,
+        imageUrl: buildDriveFullImageProxyUrl(entry.fileId),
+        displayRotation: entry.displayRotation,
+      });
+    },
+    [hasThumbnail, entry.fileId, entry.entryId, entry.displayRotation, onImageClick, title]
+  );
+
+  const imageHoverClass =
+    "transition-transform duration-300 group-hover/image:scale-105";
+
   return (
     <article className="group mb-5 break-inside-avoid overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200/70 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:ring-sage-200/80">
       <div className="relative overflow-hidden bg-slate-100">
         {hasThumbnail ? (
-          entry.displayRotation ? (
-            <RotatedContainImage
-              src={entry.thumbnailUrl!}
-              alt={title}
-              rotation={entry.displayRotation}
-              imgClassName="transition-transform duration-500 group-hover:scale-[1.01]"
-            />
-          ) : (
-            <Image
-              src={entry.thumbnailUrl!}
-              alt={title}
-              width={GALLERY_THUMB_WIDTH}
-              height={GALLERY_THUMB_WIDTH}
-              priority={false}
-              loading="lazy"
-              sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
-              className="h-auto w-full object-contain transition-transform duration-500 group-hover:scale-[1.01]"
-              style={{ width: "100%", height: "auto" }}
-            />
-          )
+          <button
+            type="button"
+            onClick={handleImageClick}
+            className="group/image block w-full cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sage-400"
+            aria-label={t("gallery.lightboxOpen", { title })}
+          >
+            {entry.displayRotation ? (
+              <RotatedContainImage
+                src={entry.thumbnailUrl!}
+                alt={title}
+                rotation={entry.displayRotation}
+                imgClassName={imageHoverClass}
+              />
+            ) : (
+              <Image
+                src={entry.thumbnailUrl!}
+                alt={title}
+                width={GALLERY_THUMB_WIDTH}
+                height={GALLERY_THUMB_WIDTH}
+                priority={false}
+                loading="lazy"
+                sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                className={`h-auto w-full object-contain ${imageHoverClass}`}
+                style={{ width: "100%", height: "auto" }}
+              />
+            )}
+          </button>
         ) : (
           <div className="flex aspect-[4/3] flex-col items-center justify-center gap-2 bg-gradient-to-br from-slate-100 to-slate-200 text-slate-500">
             <FileText className="h-10 w-10 opacity-60" />

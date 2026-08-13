@@ -14,6 +14,7 @@ import {
 import type {
   EntriesListResponse,
   EntryDetailResponse,
+  ReviewEntryDetail,
   SubmitScorePayload,
   SubmitScoreResponse,
 } from "@/types/review";
@@ -66,6 +67,11 @@ export async function listPublicGalleryEntries(): Promise<GalleryEntriesResponse
   const entries = mergeVoteCounts(baseEntries, voteMap);
 
   return { ok: true, entries };
+}
+
+export async function listApprovedReviewEntries(): Promise<ReviewEntryDetail[]> {
+  const all = await loadAllEntriesFromGas();
+  return all.filter((entry) => isJudgeVisibleReviewStatus(entry.reviewStatus));
 }
 
 export async function listEntries(judgeId: string): Promise<EntriesListResponse> {

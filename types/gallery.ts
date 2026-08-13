@@ -14,6 +14,14 @@ export interface GalleryEntry {
 
 export type GalleryEntryWithVotes = GalleryEntry & { voteCount: number };
 
+/** Payload for the single shared gallery lightbox (parent-managed state). */
+export interface GalleryLightboxSelection {
+  entryId: string;
+  title: string;
+  imageUrl: string;
+  displayRotation?: number;
+}
+
 export interface GalleryEntriesResponse {
   ok: boolean;
   error?: string;

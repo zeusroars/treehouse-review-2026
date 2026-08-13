@@ -38,6 +38,35 @@ export async function getReviewedEntryIdsForJudge(
   }
 }
 
+export async function readAllScores(): Promise<StoredScore[]> {
+  try {
+    const raw = await fs.readFile(SCORES_PATH, "utf8");
+    const rows: StoredScore[] = [];
+    for (const line of raw.split("\n")) {
+      if (!line.trim()) continue;
+      rows.push(JSON.parse(line) as StoredScore);
+    }
+    return rows;
+  } catch {
+    return [];
+  }
+}
+
+export async function clearAllScores(): Promise<void> {
+  await ensureDataDir();
+  await fs.writeFile(SCORES_PATH, "", "utf8");
+}
+
+export async function writeAllScores(scores: StoredScore[]): Promise<void> {
+  await ensureDataDir();
+  const content = scores.map((row) => JSON.stringify(row)).join("\n");
+  await fs.writeFile(
+    SCORES_PATH,
+    content.length > 0 ? `${content}\n` : "",
+    "utf8"
+  );
+}
+
 export async function getScoreCountByEntry(): Promise<Record<string, number>> {
   try {
     const raw = await fs.readFile(SCORES_PATH, "utf8");

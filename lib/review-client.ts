@@ -1,6 +1,7 @@
 "use client";
 
 import type {
+  AdminDashboardResponse,
   EntriesListResponse,
   EntryDetailResponse,
   SubmitScorePayload,
@@ -57,6 +58,16 @@ export async function fetchEntryDetail(
 ): Promise<EntryDetailResponse> {
   const res = await fetchWithTimeout(
     `/api/review/entry?judgeId=${encodeURIComponent(judgeId)}&entryId=${encodeURIComponent(entryId)}`,
+    { cache: "no-store" }
+  );
+  return parseJson(res);
+}
+
+export async function fetchAdminDashboard(
+  judgeId: string
+): Promise<AdminDashboardResponse> {
+  const res = await fetchWithTimeout(
+    `/api/review/dashboard?judgeId=${encodeURIComponent(judgeId)}`,
     { cache: "no-store" }
   );
   return parseJson(res);

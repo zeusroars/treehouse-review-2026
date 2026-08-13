@@ -2,7 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import GalleryCard from "@/components/gallery/GalleryCard";
+import GalleryImageLightbox from "@/components/gallery/GalleryImageLightbox";
 import GalleryLeaderboard from "@/components/gallery/GalleryLeaderboard";
+import GalleryVoteRulesBanner from "@/components/gallery/GalleryVoteRulesBanner";
 import SiteHeader from "@/components/SiteHeader";
 import { VoteProvider } from "@/contexts/VoteContext";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -11,7 +13,11 @@ import {
   isTopTenByRank,
 } from "@/lib/gallery-votes";
 import { fetchTranslatedTexts } from "@/lib/translate/client";
-import type { GalleryEntriesResponse, GalleryEntryWithVotes } from "@/types/gallery";
+import type {
+  GalleryEntriesResponse,
+  GalleryEntryWithVotes,
+  GalleryLightboxSelection,
+} from "@/types/gallery";
 
 type DisplayTextMap = Record<
   string,
@@ -82,6 +88,8 @@ export default function GalleryPageClient({
   const [loading, setLoading] = useState(initialEntries.length === 0 && !initialError);
   const [translating, setTranslating] = useState(false);
   const [error, setError] = useState<string | null>(initialError);
+  const [selectedImage, setSelectedImage] =
+    useState<GalleryLightboxSelection | null>(null);
 
   const visibleEntries = useMemo(
     () => entries.slice(0, visibleCount),
@@ -184,6 +192,14 @@ export default function GalleryPageClient({
     setVisibleCount((count) => Math.min(count + PAGE_SIZE, entries.length));
   };
 
+  const handleOpenLightbox = useCallback((selection: GalleryLightboxSelection) => {
+    setSelectedImage(selection);
+  }, []);
+
+  const handleCloseLightbox = useCallback(() => {
+    setSelectedImage(null);
+  }, []);
+
   const entryCountLabel = useMemo(
     () => t("gallery.entryCount", { count: entries.length }),
     [entries.length, t]
@@ -219,6 +235,8 @@ export default function GalleryPageClient({
             </p>
           ) : null}
         </div>
+
+        <GalleryVoteRulesBanner />
 
         {loading ? (
           <div className="flex min-h-[40vh] items-center justify-center text-sm text-slate-500">
@@ -257,6 +275,7 @@ export default function GalleryPageClient({
                   displayConcept={displayText[entry.entryId]?.concept}
                   isTopTen={isTopTenByRank(voteRankMap.get(entry.entryId))}
                   onVoteCountChange={handleVoteCountChange}
+                  onImageClick={handleOpenLightbox}
                 />
               ))}
             </div>
@@ -275,6 +294,11 @@ export default function GalleryPageClient({
           </>
         )}
       </main>
+
+      <GalleryImageLightbox
+        selection={selectedImage}
+        onClose={handleCloseLightbox}
+      />
     </div>
     </VoteProvider>
   );

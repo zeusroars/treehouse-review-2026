@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ChevronDown, ChevronLeft, ChevronRight, LogOut, Send, Leaf, Shield } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, LayoutDashboard, LogOut, Send, Leaf, Shield } from "lucide-react";
+import Link from "next/link";
 import ScoreSlider from "./ScoreSlider";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useLocalizedDesignStatement } from "@/hooks/useLocalizedDesignStatement";
@@ -130,14 +131,25 @@ export default function ScoringPanel({
               {isAdmin ? t("scoring.adminOverview") : t("scoring.reviewProgress")}
             </span>
           </div>
-          <button
-            type="button"
-            onClick={onSignOut}
-            className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
-          >
-            <LogOut className="h-3.5 w-3.5" />
-            {t("scoring.signOut")}
-          </button>
+          <div className="flex items-center gap-1">
+            {isAdmin ? (
+              <Link
+                href="/judge/dashboard"
+                className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-amber-600 transition-colors hover:bg-amber-50 hover:text-amber-700"
+              >
+                <LayoutDashboard className="h-3.5 w-3.5" />
+                {t("adminDashboard.shortLink")}
+              </Link>
+            ) : null}
+            <button
+              type="button"
+              onClick={onSignOut}
+              className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+              {t("scoring.signOut")}
+            </button>
+          </div>
         </div>
         <div className="mt-2 flex items-baseline justify-between gap-2">
           <h2 className="text-xl font-light text-slate-800">
