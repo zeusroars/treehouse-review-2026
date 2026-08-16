@@ -1,5 +1,11 @@
 "use client";
 
+import { fetchWithCache, invalidateFetchCache } from "@/lib/client/fetch-cache";
+import {
+  CONNECTION_FAILED_CODE,
+  ConnectionError,
+  toClientConnectionErrorCode,
+} from "@/lib/gas/connection-error";
 import type {
   AdminDashboardResponse,
   EntriesListResponse,
@@ -8,6 +14,9 @@ import type {
   SubmitScoreResponse,
   ValidateJudgeResponse,
 } from "@/types/review";
+
+const ENTRIES_CACHE_TTL_MS = 30_000;
+const DATA_FETCH_TIMEOUT_MS = 30_000;
 
 async function fetchWithTimeout(
   input: RequestInfo | URL,
@@ -24,13 +33,25 @@ async function fetchWithTimeout(
 }
 
 async function parseJson<T>(res: Response): Promise<T> {
-  const data = (await res.json()) as T & { error?: string };
+  const data = (await res.json()) as T & { error?: string; errorCode?: string };
   if (!res.ok) {
-    throw new Error(
+    const errorMessage =
       typeof data === "object" && data && "error" in data && data.error
         ? String(data.error)
-        : `Request failed (${res.status})`
-    );
+        : `Request failed (${res.status})`;
+    const errorCode =
+      typeof data === "object" && data && "errorCode" in data
+        ? String(data.errorCode ?? "")
+        : "";
+
+    if (
+      errorCode === CONNECTION_FAILED_CODE ||
+      toClientConnectionErrorCode(errorMessage)
+    ) {
+      throw new ConnectionError();
+    }
+
+    throw new Error(errorMessage);
   }
   return data;
 }
@@ -44,12 +65,28 @@ export async function validateJudge(code: string): Promise<ValidateJudgeResponse
   return parseJson(res);
 }
 
-export async function fetchEntries(judgeId: string): Promise<EntriesListResponse> {
-  const res = await fetchWithTimeout(
-    `/api/review/entries?judgeId=${encodeURIComponent(judgeId)}`,
-    { cache: "no-store" }
+export async function fetchEntries(
+  judgeId: string,
+  options?: { force?: boolean }
+): Promise<EntriesListResponse> {
+  const cacheKey = `review:entries:${judgeId}`;
+
+  if (options?.force) {
+    invalidateFetchCache(cacheKey);
+  }
+
+  return fetchWithCache(
+    cacheKey,
+    async () => {
+      const res = await fetchWithTimeout(
+        `/api/review/entries?judgeId=${encodeURIComponent(judgeId)}`,
+        { cache: "no-store" },
+        DATA_FETCH_TIMEOUT_MS
+      );
+      return parseJson<EntriesListResponse>(res);
+    },
+    ENTRIES_CACHE_TTL_MS
   );
-  return parseJson(res);
 }
 
 export async function fetchEntryDetail(
@@ -58,7 +95,8 @@ export async function fetchEntryDetail(
 ): Promise<EntryDetailResponse> {
   const res = await fetchWithTimeout(
     `/api/review/entry?judgeId=${encodeURIComponent(judgeId)}&entryId=${encodeURIComponent(entryId)}`,
-    { cache: "no-store" }
+    { cache: "no-store" },
+    DATA_FETCH_TIMEOUT_MS
   );
   return parseJson(res);
 }

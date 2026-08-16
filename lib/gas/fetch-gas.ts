@@ -1,5 +1,6 @@
-const GAS_FETCH_MAX_ATTEMPTS = 4;
+const GAS_FETCH_MAX_ATTEMPTS = 3;
 const GAS_FETCH_RETRY_BASE_MS = 350;
+const GAS_FETCH_TIMEOUT_MS = 8_000;
 
 function isGasHtmlErrorBody(text: string): boolean {
   const trimmed = text.trimStart().toLowerCase();
@@ -41,11 +42,21 @@ export async function fetchGasTextWithMeta(
 
   for (let attempt = 1; attempt <= GAS_FETCH_MAX_ATTEMPTS; attempt++) {
     const attemptUrl = withRetryQuery(url, attempt);
+    const controller = new AbortController();
+    const callerSignal = options.init?.signal;
+    const abortFromCaller = () => controller.abort();
+    const timer = setTimeout(() => controller.abort(), GAS_FETCH_TIMEOUT_MS);
+
+    if (callerSignal) {
+      if (callerSignal.aborted) controller.abort();
+      else callerSignal.addEventListener("abort", abortFromCaller, { once: true });
+    }
 
     try {
       const res = await fetch(attemptUrl, {
         redirect: "follow",
         ...options.init,
+        signal: controller.signal,
       });
 
       lastStatus = res.status;
@@ -61,7 +72,19 @@ export async function fetchGasTextWithMeta(
         lastDetail = `HTTP ${res.status}`;
       }
     } catch (e) {
-      lastDetail = e instanceof Error ? e.message : String(e);
+      lastDetail =
+        e instanceof Error && e.name === "AbortError"
+          ? "連線逾時"
+          : e instanceof Error
+            ? e.message
+            : String(e);
+    } finally {
+      clearTimeout(timer);
+      callerSignal?.removeEventListener("abort", abortFromCaller);
+    }
+
+    if (callerSignal?.aborted) {
+      break;
     }
 
     if (attempt < GAS_FETCH_MAX_ATTEMPTS) {

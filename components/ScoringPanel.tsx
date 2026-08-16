@@ -74,9 +74,6 @@ export default function ScoringPanel({
   const [scores, setScores] = useState<Record<string, number>>(() =>
     defaultScores(criteria)
   );
-  const [comments, setComments] = useState<Record<string, string>>(() =>
-    defaultComments(criteria)
-  );
   const [conceptOpen, setConceptOpen] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -84,7 +81,6 @@ export default function ScoringPanel({
 
   useEffect(() => {
     setScores(defaultScores(criteria));
-    setComments(defaultComments(criteria));
     setSubmitted(false);
     setError(null);
   }, [entryId, criteria]);
@@ -102,7 +98,7 @@ export default function ScoringPanel({
         entryId,
         category,
         scores,
-        comments,
+        comments: defaultComments(criteria),
       });
       if (!result.ok) {
         setError(result.error ?? t("scoring.submitFailed"));
@@ -246,10 +242,6 @@ export default function ScoringPanel({
               weight={weight}
               value={scores[key] ?? 0}
               onChange={(v) => setScores((s) => ({ ...s, [key]: v }))}
-              comment={comments[key] ?? ""}
-              onCommentChange={(c) =>
-                setComments((cm) => ({ ...cm, [key]: c }))
-              }
             />
           ))}
         </div>

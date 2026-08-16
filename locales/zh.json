@@ -5,6 +5,13 @@
     "en": "English",
     "ja": "日本語"
   },
+  "common": {
+    "emptyEntries": "目前尚無報名作品",
+    "connectionErrorTitle": "連線遇到小塞車",
+    "connectionErrorDescription": "雲端伺服器目前正在處理較多請求，請稍候幾秒鐘再試一次。",
+    "connectionErrorRetry": "重新嘗試",
+    "connectionErrorRetrying": "重新連線中…"
+  },
   "gallery": {
     "title": "2026 國際樹屋設計競賽 · 線上畫廊",
     "subtitle": "探索來自世界各地的樹屋設計想像。每一件作品都是對自然、永續與創造力的獨特詮釋。",
@@ -13,7 +20,7 @@
     "loading": "載入畫廊作品中…",
     "loadFailed": "無法載入畫廊作品",
     "retry": "重新載入",
-    "empty": "目前尚無可展示的作品",
+    "empty": "目前尚無報名作品",
     "entryCount": "共 {count} 件作品",
     "noConcept": "（未提供設計理念）",
     "vote": "投給它",
@@ -94,7 +101,7 @@
     "translatingStatement": "正在翻譯設計理念…",
     "translateFailed": "翻譯失敗，已顯示原文",
     "adminHint": "管理者模式：可瀏覽全部作品並測試評分。",
-    "judgeHint": "請依各項標準評分並填寫簡要講評。",
+    "judgeHint": "請依各項標準評分。",
     "submitting": "提交中...",
     "submitted": "✓ 評分已提交",
     "submitScore": "提交評分",

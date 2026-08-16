@@ -1,11 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import ConnectionErrorState from "@/components/ConnectionErrorState";
+import EmptyEntriesState from "@/components/EmptyEntriesState";
 import JudgeGate from "@/components/JudgeGate";
 import JudgeShell from "@/components/JudgeShell";
 import EntryThumbnailStrip from "@/components/EntryThumbnailStrip";
 import PreviewPanel from "@/components/PreviewPanel";
 import ScoringPanel from "@/components/ScoringPanel";
+import { isConnectionError } from "@/lib/gas/connection-error";
 import {
   clearJudgeSession,
   fetchEntries,
@@ -37,7 +40,7 @@ export default function ReviewWorkspace() {
   const [currentPage, setCurrentPage] = useState(1);
   const [listLoading, setListLoading] = useState(false);
   const [detailLoading, setDetailLoading] = useState(false);
-  const [listError, setListError] = useState<string | null>(null);
+  const [listConnectionError, setListConnectionError] = useState(false);
 
   const isAdmin = session ? isAdminSession(session) : false;
 
@@ -62,13 +65,13 @@ export default function ReviewWorkspace() {
   );
 
   const loadEntryList = useCallback(
-    async (judgeId: string, adminMode: boolean) => {
+    async (judgeId: string, adminMode: boolean, options?: { force?: boolean }) => {
       setListLoading(true);
-      setListError(null);
+      setListConnectionError(false);
       try {
-        const result = await fetchEntries(judgeId);
+        const result = await fetchEntries(judgeId, { force: options?.force });
         if (!result.ok || !result.entries) {
-          throw new Error(result.error ?? "無法載入作品清單");
+          throw new Error("無法載入作品清單");
         }
         const approvedEntries = result.entries.filter((item) =>
           isJudgeVisibleReviewStatus(item.reviewStatus)
@@ -83,13 +86,7 @@ export default function ReviewWorkspace() {
             : firstPendingEntryId(approvedEntries);
         });
       } catch (err) {
-        const message =
-          err instanceof Error && err.name === "AbortError"
-            ? "連線逾時，請確認 GAS_WEB_APP_URL 是否已設定"
-            : err instanceof Error
-              ? err.message
-              : "載入失敗";
-        setListError(message);
+        setListConnectionError(true);
         setEntries([]);
         setActiveEntryId(null);
       } finally {
@@ -121,12 +118,13 @@ export default function ReviewWorkspace() {
           throw new Error(result.error ?? "無法載入作品");
         }
         setEntryDetail(result.entry);
-        setListError(null);
       })
       .catch((err) => {
         if (!cancelled) {
           setEntryDetail(null);
-          setListError(err instanceof Error ? err.message : "載入作品失敗");
+          if (isConnectionError(err)) {
+            setListConnectionError(true);
+          }
         }
       })
       .finally(() => {
@@ -200,7 +198,7 @@ export default function ReviewWorkspace() {
     );
   }
 
-  if (listLoading && entries.length === 0) {
+  if (listLoading && entries.length === 0 && !listConnectionError) {
     return (
       <JudgeShell>
         <div className="flex flex-1 items-center justify-center py-20 text-sm text-slate-500">
@@ -210,67 +208,39 @@ export default function ReviewWorkspace() {
     );
   }
 
-  if (entries.length === 0) {
+  if (listConnectionError) {
     return (
       <JudgeShell>
-        <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 py-20 text-center">
-        <p className="text-lg font-light text-slate-700">目前沒有報名作品</p>
-        <p className="max-w-md text-sm leading-relaxed text-slate-500">
-          請確認 `.env.local` 已設定{" "}
-          <code className="text-xs">GAS_WEB_APP_URL</code>，且 GAS 回傳的
-          2D 陣列含有「圖片雲端網址」或「作品理念」等資料。
-        </p>
-        <p className="text-xs text-slate-400">
-          診斷：
-          <a
-            href="/api/review/sheet-probe"
-            className="ml-1 text-sage-600 underline"
-            target="_blank"
-            rel="noreferrer"
+        <ConnectionErrorState
+          className="flex-1"
+          retrying={listLoading}
+          onRetry={() => void loadEntryList(session.judgeId, isAdmin, { force: true })}
+        />
+        <div className="pb-8 text-center">
+          <button
+            type="button"
+            onClick={handleSignOut}
+            className="text-sm text-slate-400 underline"
           >
-            /api/review/sheet-probe
-          </a>
-        </p>
-        <button
-          type="button"
-          onClick={() => loadEntryList(session.judgeId, isAdmin)}
-          className="text-sm text-sage-600 underline"
-        >
-          重新載入
-        </button>
-        <button
-          type="button"
-          onClick={handleSignOut}
-          className="text-sm text-slate-400 underline"
-        >
-          返回登入
-        </button>
+            返回登入
+          </button>
         </div>
       </JudgeShell>
     );
   }
 
-  if (listError && !activeSummary) {
+  if (entries.length === 0) {
     return (
       <JudgeShell>
-        <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 py-20">
-        <p className="text-sm text-red-600">{listError}</p>
-        <div className="flex gap-3">
-          <button
-            type="button"
-            onClick={() => loadEntryList(session.judgeId, isAdmin)}
-            className="rounded-xl bg-sage-600 px-4 py-2 text-sm text-white"
-          >
-            重試
-          </button>
+        <EmptyEntriesState className="flex-1" />
+        <div className="pb-8 text-center">
           <button
             type="button"
             onClick={handleSignOut}
-            className="rounded-xl border border-slate-200 px-4 py-2 text-sm text-slate-600"
+            className="text-sm text-slate-400 underline"
           >
             返回登入
           </button>
-        </div>
         </div>
       </JudgeShell>
     );

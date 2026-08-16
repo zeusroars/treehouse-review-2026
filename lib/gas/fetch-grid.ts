@@ -7,7 +7,7 @@ export async function fetchGasRawGrid(): Promise<string[][]> {
     label: "GAS sheet API",
     init: {
       method: "GET",
-      cache: "no-store",
+      next: { revalidate: 60 },
     },
   });
 
@@ -20,6 +20,10 @@ export async function fetchGasRawGrid(): Promise<string[][]> {
         ? "GAS GET 回傳了投票 JSON 而非試算表二維陣列。請在 GAS doGet 加入 mode=sheet，或設定 GAS_SHEET_GET_QUERY=mode=sheet 並重新部署。"
         : "GAS 回傳格式錯誤：預期為二維陣列";
     throw new Error(hint);
+  }
+
+  if (data.length === 0) {
+    return [];
   }
 
   return data.map((row) => {

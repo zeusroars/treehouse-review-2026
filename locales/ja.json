@@ -5,6 +5,13 @@
     "en": "English",
     "ja": "日本語"
   },
+  "common": {
+    "emptyEntries": "現在、応募作品はありません",
+    "connectionErrorTitle": "接続が少し混み合っています",
+    "connectionErrorDescription": "クラウドサーバーへのリクエストが集中しています。数秒お待ちいただいてから、もう一度お試しください。",
+    "connectionErrorRetry": "再試行",
+    "connectionErrorRetrying": "再接続中…"
+  },
   "gallery": {
     "title": "2026 国際ツリーハウス設計コンペ · ギャラリー",
     "subtitle": "世界各地から寄せられたツリーハウス設計をご覧ください。自然、持続可能性、想像力へのそれぞれの解釈です。",
@@ -13,7 +20,7 @@
     "loading": "ギャラリーを読み込み中…",
     "loadFailed": "ギャラリーの読み込みに失敗しました",
     "retry": "再読み込み",
-    "empty": "表示できる作品がありません",
+    "empty": "現在、応募作品はありません",
     "entryCount": "全 {count} 点",
     "noConcept": "（デザインコンセプトなし）",
     "vote": "投票する",
@@ -94,7 +101,7 @@
     "translatingStatement": "デザインコンセプトを翻訳中…",
     "translateFailed": "翻訳に失敗しました。原文を表示しています",
     "adminHint": "管理者モード：全作品の閲覧と採点テストが可能です。",
-    "judgeHint": "各基準で採点し、簡潔な講評を記入してください。",
+    "judgeHint": "各基準で採点してください。",
     "submitting": "送信中…",
     "submitted": "✓ 採点を送信しました",
     "submitScore": "採点を送信",

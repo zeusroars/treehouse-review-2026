@@ -7,8 +7,6 @@ interface ScoreSliderProps {
   weight: number;
   value: number;
   onChange: (value: number) => void;
-  comment: string;
-  onCommentChange: (comment: string) => void;
   compact?: boolean;
 }
 
@@ -17,8 +15,6 @@ export default function ScoreSlider({
   weight,
   value,
   onChange,
-  comment,
-  onCommentChange,
   compact = false,
 }: ScoreSliderProps) {
   const { t } = useLanguage();
@@ -48,7 +44,7 @@ export default function ScoreSlider({
         </div>
       </div>
 
-      <div className={compact ? "relative mb-2.5" : "relative mb-4"}>
+      <div className={compact ? "relative" : "relative mb-4"}>
         <div className="absolute inset-y-0 left-0 h-1.5 rounded-full bg-sage-300/60 transition-all duration-150"
           style={{ width: `${percentage}%` }}
         />
@@ -68,16 +64,6 @@ export default function ScoreSlider({
           <span>10</span>
         </div>
       </div>
-
-      <textarea
-        value={comment}
-        onChange={(e) => onCommentChange(e.target.value)}
-        placeholder={t("scoreSlider.commentPlaceholder")}
-        rows={compact ? 1 : 2}
-        className={`w-full resize-none rounded-xl border border-slate-200/80 bg-white/80 text-slate-700 placeholder:text-slate-300 transition-all duration-200 focus:border-sage-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sage-200/60 ${
-          compact ? "px-3 py-2 text-xs" : "px-3.5 py-2.5 text-sm"
-        }`}
-      />
     </div>
   );
 }

@@ -104,13 +104,21 @@ export function parseVoteCountsPayload(data: unknown): Record<string, number> {
  */
 export async function fetchVoteCountsFromGas(): Promise<Record<string, number>> {
   const url = getGasVoteFetchUrl();
-  const data = await fetchGasJson<unknown>(url, {
-    label: "GAS vote GET",
-    init: {
-      method: "GET",
-      next: { revalidate: VOTE_COUNTS_REVALIDATE_SECONDS },
-    },
-  });
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 4_000);
 
-  return parseVoteCountsPayload(data);
+  try {
+    const data = await fetchGasJson<unknown>(url, {
+      label: "GAS vote GET",
+      init: {
+        method: "GET",
+        next: { revalidate: VOTE_COUNTS_REVALIDATE_SECONDS },
+        signal: controller.signal,
+      },
+    });
+
+    return parseVoteCountsPayload(data);
+  } finally {
+    clearTimeout(timer);
+  }
 }

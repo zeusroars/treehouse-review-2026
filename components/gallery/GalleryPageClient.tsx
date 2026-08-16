@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import ConnectionErrorState from "@/components/ConnectionErrorState";
+import EmptyEntriesState from "@/components/EmptyEntriesState";
 import GalleryCard from "@/components/gallery/GalleryCard";
 import GalleryImageLightbox from "@/components/gallery/GalleryImageLightbox";
 import GalleryLeaderboard from "@/components/gallery/GalleryLeaderboard";
@@ -8,13 +10,13 @@ import GalleryVoteRulesBanner from "@/components/gallery/GalleryVoteRulesBanner"
 import SiteHeader from "@/components/SiteHeader";
 import { VoteProvider } from "@/contexts/VoteContext";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { fetchGalleryEntries } from "@/lib/gallery-client";
 import {
   computeVoteRankMap,
   isTopTenByRank,
 } from "@/lib/gallery-votes";
 import { fetchTranslatedTexts } from "@/lib/translate/client";
 import type {
-  GalleryEntriesResponse,
   GalleryEntryWithVotes,
   GalleryLightboxSelection,
 } from "@/types/gallery";
@@ -74,20 +76,22 @@ async function buildDisplayTextMap(
 
 interface GalleryPageClientProps {
   initialEntries?: GalleryEntryWithVotes[];
-  initialError?: string | null;
+  initialLoadFailed?: boolean;
 }
 
 export default function GalleryPageClient({
   initialEntries = [],
-  initialError = null,
+  initialLoadFailed = false,
 }: GalleryPageClientProps) {
   const { t, locale } = useLanguage();
   const [entries, setEntries] = useState<GalleryEntryWithVotes[]>(initialEntries);
   const [displayText, setDisplayText] = useState<DisplayTextMap>({});
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const [loading, setLoading] = useState(initialEntries.length === 0 && !initialError);
+  const [loading, setLoading] = useState(
+    initialEntries.length === 0 && !initialLoadFailed
+  );
   const [translating, setTranslating] = useState(false);
-  const [error, setError] = useState<string | null>(initialError);
+  const [connectionError, setConnectionError] = useState(initialLoadFailed);
   const [selectedImage, setSelectedImage] =
     useState<GalleryLightboxSelection | null>(null);
 
@@ -119,36 +123,27 @@ export default function GalleryPageClient({
 
   const hasMore = visibleCount < entries.length;
 
-  const loadEntries = useCallback(async () => {
+  const loadEntries = useCallback(async (options?: { force?: boolean }) => {
     setLoading(true);
-    setError(null);
+    setConnectionError(false);
     try {
-      const res = await fetch("/api/gallery/entries");
-      const data = (await res.json()) as GalleryEntriesResponse;
-      if (!res.ok || !data.ok || !data.entries) {
-        throw new Error(data.error ?? t("gallery.loadFailed"));
-      }
-      setEntries(
-        data.entries.map((e) => ({
-          ...e,
-          voteCount: e.voteCount ?? 0,
-        }))
-      );
+      const nextEntries = await fetchGalleryEntries({ force: options?.force });
+      setEntries(nextEntries);
       setVisibleCount(PAGE_SIZE);
-    } catch (err) {
+    } catch {
       setEntries([]);
       setVisibleCount(PAGE_SIZE);
-      setError(err instanceof Error ? err.message : t("gallery.loadFailed"));
+      setConnectionError(true);
     } finally {
       setLoading(false);
     }
-  }, [t]);
+  }, []);
 
   useEffect(() => {
-    if (initialEntries.length === 0 && !initialError) {
+    if (initialEntries.length === 0 && !initialLoadFailed) {
       void loadEntries();
     }
-  }, [initialEntries.length, initialError, loadEntries]);
+  }, [initialEntries.length, initialLoadFailed, loadEntries]);
 
   useEffect(() => {
     if (locale === "zh" || entriesToTranslate.length === 0) {
@@ -242,21 +237,14 @@ export default function GalleryPageClient({
           <div className="flex min-h-[40vh] items-center justify-center text-sm text-slate-500">
             {t("gallery.loading")}
           </div>
-        ) : error ? (
-          <div className="flex min-h-[40vh] flex-col items-center justify-center gap-3 text-center">
-            <p className="text-sm text-red-600">{error}</p>
-            <button
-              type="button"
-              onClick={() => void loadEntries()}
-              className="text-sm text-sage-600 underline"
-            >
-              {t("gallery.retry")}
-            </button>
-          </div>
+        ) : connectionError ? (
+          <ConnectionErrorState
+            className="min-h-[40vh]"
+            retrying={loading}
+            onRetry={() => void loadEntries({ force: true })}
+          />
         ) : entries.length === 0 ? (
-          <div className="flex min-h-[40vh] items-center justify-center text-sm text-slate-500">
-            {t("gallery.empty")}
-          </div>
+          <EmptyEntriesState className="min-h-[40vh]" />
         ) : (
           <>
             {topThreeEntries.length > 0 ? (

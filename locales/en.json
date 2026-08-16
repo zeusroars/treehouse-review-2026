@@ -5,6 +5,13 @@
     "en": "English",
     "ja": "日本語"
   },
+  "common": {
+    "emptyEntries": "No entries registered yet",
+    "connectionErrorTitle": "Connection is a bit slow",
+    "connectionErrorDescription": "Our cloud service is handling many requests right now. Please wait a few seconds and try again.",
+    "connectionErrorRetry": "Retry",
+    "connectionErrorRetrying": "Retrying…"
+  },
   "gallery": {
     "title": "2026 International Treehouse Design Competition · Gallery",
     "subtitle": "Explore treehouse design visions from around the world — each entry celebrates nature, sustainability, and imagination.",
@@ -13,7 +20,7 @@
     "loading": "Loading gallery…",
     "loadFailed": "Failed to load gallery",
     "retry": "Retry",
-    "empty": "No entries to display yet",
+    "empty": "No entries registered yet",
     "entryCount": "{count} entries",
     "noConcept": "(No design statement)",
     "vote": "Vote",
@@ -94,7 +101,7 @@
     "translatingStatement": "Translating design statement…",
     "translateFailed": "Translation failed — showing original text",
     "adminHint": "Admin mode: browse all entries and test scoring.",
-    "judgeHint": "Score each criterion and add brief comments.",
+    "judgeHint": "Score each criterion.",
     "submitting": "Submitting…",
     "submitted": "✓ Score submitted",
     "submitScore": "Submit score",

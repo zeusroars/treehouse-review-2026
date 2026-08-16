@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { listEntries } from "@/lib/entries-provider";
+import { jsonGasError } from "@/lib/api/gas-error-response";
 
 export async function GET(request: Request) {
   try {
@@ -19,7 +20,6 @@ export async function GET(request: Request) {
 
     return NextResponse.json(result);
   } catch (e) {
-    const message = e instanceof Error ? e.message : "無法載入作品清單";
-    return NextResponse.json({ ok: false, error: message }, { status: 502 });
+    return jsonGasError(e, "無法載入作品清單");
   }
 }
