@@ -30,6 +30,8 @@ export interface Day4LoungeEntry {
   technicalAssessment: string;
   discussionCount: number;
   notes: Day4Note[];
+  /** Judge IDs who nominated this entry for the shortlist (四強). */
+  shortlistedBy: string[];
 }
 
 export interface Day4LoungeResponse {
@@ -59,4 +61,9 @@ export type Day4LoungeAction =
       noteJudgeId: string;
       content: string;
       language: Day4Language;
+    }
+  | {
+      action: "toggle_shortlist";
+      judgeId: string;
+      entryId: string;
     };

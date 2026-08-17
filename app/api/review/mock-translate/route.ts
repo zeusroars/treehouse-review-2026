@@ -1,14 +1,9 @@
 import { NextResponse } from "next/server";
-import type { Day4Language } from "@/types/day4-lounge";
+import { translateBetween, type LocaleCode } from "@/lib/translate/server";
 
 const MAX_TEXT_LENGTH = 1_000;
-const LANGUAGE_LABELS: Record<Day4Language, string> = {
-  zh: "中文",
-  en: "English",
-  ja: "日本語",
-};
 
-function isLanguage(value: unknown): value is Day4Language {
+function isLanguage(value: unknown): value is LocaleCode {
   return value === "zh" || value === "en" || value === "ja";
 }
 
@@ -33,19 +28,19 @@ export async function POST(request: Request) {
       );
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 650));
+    const translation = await translateBetween(text, body.source, body.target);
 
     return NextResponse.json({
       ok: true,
-      translation:
-        body.source === body.target
-          ? text
-          : `[${LANGUAGE_LABELS[body.target]} · Mock] ${text}`,
+      translation,
     });
-  } catch {
+  } catch (error) {
     return NextResponse.json(
-      { ok: false, error: "Mock translation failed" },
-      { status: 400 }
+      {
+        ok: false,
+        error: error instanceof Error ? error.message : "Translation failed",
+      },
+      { status: 502 }
     );
   }
 }

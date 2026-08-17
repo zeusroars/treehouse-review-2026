@@ -60,12 +60,13 @@
     "booting": "Starting review system…",
     "bootHint": "If this takes more than 10 seconds, refresh the page",
     "backToGallery": "Back to gallery",
-    "navPhase1": "Phase 1: Blind review",
-    "navPhase2": "Phase 2: Final discussion",
-    "enterDay4Lounge": "Enter Day 4 final discussion lounge"
+    "navPhase1": "Day1-2 · Phase 1: Blind review",
+    "navPhase2": "Day3-4 · Phase 2: Final discussion",
+    "navPhase3": "Day5 · Phase 3: Chairman board",
+    "enterDay4Lounge": "Enter Day 3-4 final discussion lounge"
   },
   "preview": {
-    "brandTagline": "Retree · Treep · Forestay",
+    "brandTagline": "Treehouse Association of Taiwan",
     "competitionTitle": "2026 International Treehouse Design Competition",
     "adminMode": "Admin Mode",
     "loadingFiles": "Loading submission files…",
@@ -130,9 +131,90 @@
     "constructability": "Spatial & constructability feasibility"
   },
   "day4": {
+    "title": "Final Round Async Discussion",
+    "subtitle": "16 finalist entries · Six-judge Pin-up Lounge",
+    "phaseBadge": "Final Review · Day 3-4",
+    "gridLoading": "Setting up the pin-up wall…",
+    "loadFailed": "Unable to load Day 3-4 Lounge",
+    "updateFailed": "Failed to update discussion",
+    "reload": "Reload",
+    "noPreview": "No preview",
+    "pinupLabel": "Day 3-4 Pin-up Review",
+    "closePinup": "Close pin-up",
+    "noImage": "No preview image available",
+    "noWorkTitle": "No work title provided",
+    "noWorkConcept": "No design statement provided",
+    "translatingEntry": "Translating entry details…",
+    "technicalAssessmentTitle": "Technical Assessment",
+    "technicalAssessment": "Please jointly review structural safety, material durability, constructability, and site impact. Final conclusions will be compiled by the technical team.",
+    "waitingForReview": "Waiting for {name}…",
+    "editNote": "Edit note",
+    "viewThread": "View thread",
+    "threadTitle": "{name}'s sticky note",
+    "closeThread": "Close thread",
+    "noCoreComment": "No core comment yet",
+    "updateCoreComment": "Update your core comment",
+    "replyTo": "Reply to {name}",
+    "notePlaceholder": "Write a concise pin-up comment…",
+    "replyPlaceholder": "Add a reply…",
+    "submit": "Submit",
     "translated": "Translated",
     "translating": "Translating comment",
-    "originalText": "Original text"
+    "originalText": "Original text",
+    "prevEntry": "Previous",
+    "nextEntry": "Next",
+    "entryCounter": "{current}/{total}",
+    "markShortlist": "Mark shortlist",
+    "shortlistActive": "Shortlisted",
+    "shortlistHint": "Toggle shortlist nomination"
+  },
+  "day5": {
+    "title": "Final Decision Board",
+    "subtitle": "Drag 16 finalist entries into decision zones · Chairman only",
+    "boardLabel": "Day 5 Chairman Board",
+    "loading": "Loading finalist entries…",
+    "loadFailed": "Unable to load Day 5 board",
+    "reload": "Reload",
+    "noPreview": "No preview",
+    "dropHere": "Drop entries here",
+    "markComplete": "Mark step complete",
+    "columnFull": "\"{column}\" is full",
+    "top4Note": "Grand prize will be decided by organizers after the meeting",
+    "runDownTitle": "Day 5 Final Meeting Guide",
+    "runDownSubtitle": "60-minute run-down · Chairman script",
+    "columns": {
+      "pool": "Candidate Pool",
+      "top4": "Top 4",
+      "honorable": "Honorable Mentions",
+      "eliminated": "Eliminated"
+    },
+    "runDown": {
+      "step1": {
+        "time": "00:00 – 05:00",
+        "title": "Rules & framing",
+        "desc": "Confirm the grand prize will be decided by the organizers from the Top 4 based on technical criteria."
+      },
+      "step2": {
+        "time": "05:00 – 15:00",
+        "title": "Elimination round",
+        "desc": "Review lowest Day 3-4 star counts and move 2 entries to Eliminated."
+      },
+      "step3": {
+        "time": "15:00 – 45:00",
+        "title": "Top 4 battle",
+        "desc": "Advance high-star entries from Day 3-4 and debate contested works; select 4 for Top 4."
+      },
+      "step4": {
+        "time": "45:00 – 55:00",
+        "title": "Honorable mentions",
+        "desc": "Move the remaining 10 non-Top-4 entries to Honorable Mentions."
+      },
+      "step5": {
+        "time": "55:00 – 60:00",
+        "title": "Closing",
+        "desc": "Screenshot for records, thank the jury, adjourn."
+      }
+    }
   },
   "adminDashboard": {
     "title": "Final Round Statistics Dashboard",

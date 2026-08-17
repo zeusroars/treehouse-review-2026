@@ -35,11 +35,12 @@ export default function TranslatedComment({
 
     let cancelled = false;
     setLoading(true);
+
     void fetchMockTranslation(content, sourceLanguage, locale)
       .then((result) => {
         if (cancelled) return;
         setDisplayContent(result);
-        setTranslated(true);
+        setTranslated(result.trim() !== content.trim());
       })
       .catch(() => {
         if (!cancelled) setDisplayContent(content);
@@ -64,38 +65,38 @@ export default function TranslatedComment({
   }
 
   return (
-    <div className="relative">
+    <div className="flex min-h-0 flex-1 flex-col gap-1.5">
       {translated ? (
-        <span
-          className="group absolute -top-7 right-0 z-10"
-        >
-          <button
-            type="button"
-            title={content}
-            onClick={(event) => {
-              event.stopPropagation();
-              setShowOriginal((current) => !current);
-            }}
-            className="inline-flex cursor-pointer items-center gap-1 rounded-full bg-white/55 px-2 py-0.5 text-[9px] text-slate-500 backdrop-blur transition hover:bg-white/80"
-          >
-            <Sparkles className="h-2.5 w-2.5" />
-            {t("day4.translated")}
-          </button>
-          <span
-            className={`absolute right-0 top-full mt-1 w-64 rounded-lg bg-slate-900 px-3 py-2 text-left text-[11px] font-normal leading-relaxed text-white shadow-xl ${
-              showOriginal
-                ? "block"
-                : "invisible opacity-0 group-hover:visible group-hover:opacity-100"
-            }`}
-          >
-            <strong className="mb-1 block text-[10px] text-slate-300">
-              {t("day4.originalText")}
-            </strong>
-            {content}
+        <div className="flex shrink-0 justify-end">
+          <span className="group relative">
+            <button
+              type="button"
+              title={content}
+              onClick={(event) => {
+                event.stopPropagation();
+                setShowOriginal((current) => !current);
+              }}
+              className="inline-flex cursor-pointer items-center gap-1 rounded-full bg-white/55 px-2 py-0.5 text-[9px] text-slate-500 backdrop-blur transition hover:bg-white/80"
+            >
+              <Sparkles className="h-2.5 w-2.5" />
+              {t("day4.translated")}
+            </button>
+            <span
+              className={`absolute right-0 top-full z-20 mt-1 w-64 rounded-lg bg-slate-900 px-3 py-2 text-left text-[11px] font-normal leading-relaxed text-white shadow-xl ${
+                showOriginal
+                  ? "block"
+                  : "invisible opacity-0 group-hover:visible group-hover:opacity-100"
+              }`}
+            >
+              <strong className="mb-1 block text-[10px] text-slate-300">
+                {t("day4.originalText")}
+              </strong>
+              {content}
+            </span>
           </span>
-        </span>
+        </div>
       ) : null}
-      <p className={className}>{displayContent}</p>
+      <p className={`min-h-0 ${className}`}>{displayContent}</p>
     </div>
   );
 }

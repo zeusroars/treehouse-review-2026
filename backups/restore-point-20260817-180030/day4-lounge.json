@@ -1,0 +1,47 @@
+{
+  "notes": {
+    "TH-2026-0011": {
+      "judge_2": {
+        "content": "我就看看 再看一次",
+        "updatedAt": "2026-08-16T08:43:05.425Z",
+        "likedBy": [
+          "judge_6",
+          "judge_5"
+        ],
+        "replies": [
+          {
+            "id": "be361ea0-771e-4356-a8c4-9a2830a5841b",
+            "judgeId": "judge_6",
+            "judgeName": "評審 F",
+            "content": "我也這麼想 i think so too",
+            "language": "ja",
+            "createdAt": "2026-08-17T03:17:21.012Z"
+          },
+          {
+            "id": "b94b64db-6b9b-4349-8ec6-e5694cb75d7e",
+            "judgeId": "judge_5",
+            "judgeName": "評審 E",
+            "content": "色彩鮮艷",
+            "language": "ja",
+            "createdAt": "2026-08-17T03:54:01.582Z"
+          }
+        ]
+      },
+      "judge_6": {
+        "content": "看我",
+        "language": "ja",
+        "updatedAt": "2026-08-17T02:44:21.329Z",
+        "likedBy": [],
+        "replies": []
+      }
+    }
+  },
+  "shortlists": {
+    "judge_1": [
+      "TH-2026-0011"
+    ],
+    "judge_5": [
+      "TH-2026-0011"
+    ]
+  }
+}

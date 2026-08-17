@@ -25,8 +25,32 @@ interface StoredNote {
 }
 
 type LoungeStore = Record<string, Record<string, StoredNote>>;
+type ShortlistStore = Record<string, string[]>;
+
+interface PersistedLoungeData {
+  notes: LoungeStore;
+  shortlists: ShortlistStore;
+}
 
 let writeQueue: Promise<unknown> = Promise.resolve();
+
+function isWrappedStore(value: unknown): value is PersistedLoungeData {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "notes" in value &&
+    typeof (value as PersistedLoungeData).notes === "object"
+  );
+}
+
+function shortlistedByForEntry(
+  shortlists: ShortlistStore,
+  entryId: string
+): string[] {
+  return Object.entries(shortlists)
+    .filter(([, entryIds]) => entryIds.includes(entryId))
+    .map(([judgeId]) => judgeId);
+}
 
 function emptyNote(judgeId: string): Day4Note {
   return {
@@ -40,18 +64,30 @@ function emptyNote(judgeId: string): Day4Note {
   };
 }
 
-async function readStore(): Promise<LoungeStore> {
+async function readPersisted(): Promise<PersistedLoungeData> {
   try {
-    return JSON.parse(await fs.readFile(STORE_PATH, "utf8")) as LoungeStore;
-  } catch {
-    return {};
+    const raw = await fs.readFile(STORE_PATH, "utf8");
+    if (!raw.trim()) return { notes: {}, shortlists: {} };
+    const parsed = JSON.parse(raw) as unknown;
+    if (isWrappedStore(parsed)) {
+      return {
+        notes: parsed.notes ?? {},
+        shortlists: parsed.shortlists ?? {},
+      };
+    }
+    return { notes: parsed as LoungeStore, shortlists: {} };
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      return { notes: {}, shortlists: {} };
+    }
+    return { notes: {}, shortlists: {} };
   }
 }
 
-async function writeStore(store: LoungeStore): Promise<void> {
+async function writePersisted(data: PersistedLoungeData): Promise<void> {
   await fs.mkdir(path.dirname(STORE_PATH), { recursive: true });
   const tempPath = `${STORE_PATH}.tmp`;
-  await fs.writeFile(tempPath, JSON.stringify(store, null, 2), "utf8");
+  await fs.writeFile(tempPath, JSON.stringify(data, null, 2), "utf8");
   await fs.rename(tempPath, STORE_PATH);
 }
 
@@ -76,11 +112,12 @@ function notesForEntry(store: LoungeStore, entryId: string): Day4Note[] {
 }
 
 export async function listDay4LoungeEntries(): Promise<Day4LoungeEntry[]> {
-  const [rows, store, entryDetails] = await Promise.all([
+  const [rows, persisted, entryDetails] = await Promise.all([
     buildAdminDashboardRows(),
-    readStore(),
+    readPersisted(),
     loadAllEntriesFromGas(),
   ]);
+  const { notes: store, shortlists } = persisted;
   const detailsById = new Map(entryDetails.map((entry) => [entry.entryId, entry]));
   const finalists = [...rows]
     .sort((a, b) => {
@@ -120,6 +157,7 @@ export async function listDay4LoungeEntries(): Promise<Day4LoungeEntry[]> {
         0
       ),
       notes,
+      shortlistedBy: shortlistedByForEntry(shortlists, row.entryId),
     };
   });
 }
@@ -149,7 +187,9 @@ export async function mutateDay4Lounge(
   requireJudge(payload.judgeId);
 
   writeQueue = writeQueue.catch(() => undefined).then(async () => {
-    const store = await readStore();
+    const persisted = await readPersisted();
+    const store = persisted.notes;
+    const shortlists = persisted.shortlists;
     const entry = (store[payload.entryId] ??= {});
     const now = new Date().toISOString();
 
@@ -194,7 +234,14 @@ export async function mutateDay4Lounge(
       });
     }
 
-    await writeStore(store);
+    if (payload.action === "toggle_shortlist") {
+      const current = new Set(shortlists[payload.judgeId] ?? []);
+      if (current.has(payload.entryId)) current.delete(payload.entryId);
+      else current.add(payload.entryId);
+      shortlists[payload.judgeId] = [...current];
+    }
+
+    await writePersisted({ notes: store, shortlists });
   });
 
   await writeQueue;

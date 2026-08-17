@@ -1,12 +1,13 @@
 "use client";
 
+import { readJsonResponse } from "@/lib/safe-json-response";
 import type {
   Day4LoungeAction,
   Day4LoungeResponse,
 } from "@/types/day4-lounge";
 
 async function parseResponse(response: Response): Promise<Day4LoungeResponse> {
-  const data = (await response.json()) as Day4LoungeResponse;
+  const data = await readJsonResponse<Day4LoungeResponse>(response);
   if (!response.ok || !data.ok) {
     throw new Error(data.error ?? "討論區連線失敗");
   }

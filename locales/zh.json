@@ -60,12 +60,13 @@
     "booting": "正在啟動審查系統…",
     "bootHint": "若停留超過 10 秒，請重新整理頁面",
     "backToGallery": "返回大眾畫廊",
-    "navPhase1": "第一階段：獨立盲審",
-    "navPhase2": "第二階段：決選討論區",
-    "enterDay4Lounge": "進入 Day 4 決選非同步討論區"
+    "navPhase1": "Day1-2 · 第一階段：獨立盲審",
+    "navPhase2": "Day3-4 · 第二階段：決選討論區",
+    "navPhase3": "Day5 · 第三階段：決選戰情板",
+    "enterDay4Lounge": "進入 Day 3-4 決選非同步討論區"
   },
   "preview": {
-    "brandTagline": "Retree · Treep · Forestay",
+    "brandTagline": "Treehouse Association of Taiwan",
     "competitionTitle": "2026 國際樹屋設計競賽",
     "adminMode": "管理者模式",
     "loadingFiles": "載入作品檔案中…",
@@ -130,9 +131,90 @@
     "constructability": "空間與構造可行性"
   },
   "day4": {
+    "title": "決選非同步討論區",
+    "subtitle": "16 件決選作品 · 六席評審 Pin-up Lounge",
+    "phaseBadge": "Final Review · Day 3-4",
+    "gridLoading": "正在佈置評圖牆…",
+    "loadFailed": "無法載入 Day 3-4 Lounge",
+    "updateFailed": "更新討論失敗",
+    "reload": "重新載入",
+    "noPreview": "無預覽圖",
+    "pinupLabel": "Day 3-4 Pin-up Review",
+    "closePinup": "關閉評圖",
+    "noImage": "尚無可預覽圖面",
+    "noWorkTitle": "未提供作品名稱",
+    "noWorkConcept": "未提供作品理念",
+    "translatingEntry": "正在翻譯作品資訊…",
+    "technicalAssessmentTitle": "大會技術評估",
+    "technicalAssessment": "請共同確認結構安全、材料耐候性、施工可行性與基地環境影響；最終結論由大會技術團隊彙整。",
+    "waitingForReview": "等待 {name} 點評…",
+    "editNote": "編輯點評",
+    "viewThread": "查看對話",
+    "threadTitle": "{name} 的便利貼",
+    "closeThread": "關閉對話",
+    "noCoreComment": "尚未留下核心點評",
+    "updateCoreComment": "更新你的核心點評",
+    "replyTo": "回覆 {name}",
+    "notePlaceholder": "寫下簡短、明確的評圖意見…",
+    "replyPlaceholder": "加入回覆…",
+    "submit": "送出",
     "translated": "已翻譯",
     "translating": "正在翻譯留言",
-    "originalText": "原始語言內容"
+    "originalText": "原始語言內容",
+    "prevEntry": "上一件",
+    "nextEntry": "下一件",
+    "entryCounter": "{current}/{total}",
+    "markShortlist": "標記四強",
+    "shortlistActive": "已標記四強",
+    "shortlistHint": "點擊切換四強候選標記"
+  },
+  "day5": {
+    "title": "大會決選戰情板",
+    "subtitle": "拖曳 16 件決選作品至各決策區 · 主席專用",
+    "boardLabel": "Day 5 Chairman Board",
+    "loading": "正在載入決選作品…",
+    "loadFailed": "無法載入 Day 5 戰情板",
+    "reload": "重新載入",
+    "noPreview": "無預覽圖",
+    "dropHere": "拖曳作品至此",
+    "markComplete": "標記此階段完成",
+    "columnFull": "「{column}」已達上限，無法再放入",
+    "top4Note": "首獎將由主辦方會後裁定",
+    "runDownTitle": "Day 5 決選會議指南",
+    "runDownSubtitle": "60 分鐘會議流程 · 主席主持腳本",
+    "columns": {
+      "pool": "候選池 (Pool)",
+      "top4": "年度四強 (Top 4)",
+      "honorable": "佳作 (Honorable Mentions)",
+      "eliminated": "未獲選 (Eliminated)"
+    },
+    "runDown": {
+      "step1": {
+        "time": "00:00 – 05:00",
+        "title": "規則重申與定調",
+        "desc": "說明首獎將由大會依據技術條件從四強中裁定。"
+      },
+      "step2": {
+        "time": "05:00 – 15:00",
+        "title": "殘酷淘汰階段",
+        "desc": "檢視 Day 3-4 星數最低者，選出 2 件移至淘汰區。"
+      },
+      "step3": {
+        "time": "15:00 – 45:00",
+        "title": "四強爭奪戰",
+        "desc": "依據 Day 3-4 星數保送高分群，並針對爭議作品進行辯論，選出 4 件移至四強區。"
+      },
+      "step4": {
+        "time": "45:00 – 55:00",
+        "title": "佳作確認",
+        "desc": "將未進入四強的其餘 10 件作品移至佳作區。"
+      },
+      "step5": {
+        "time": "55:00 – 60:00",
+        "title": "圓滿閉幕",
+        "desc": "截圖存證，感謝評審，會議結束。"
+      }
+    }
   },
   "adminDashboard": {
     "title": "決選統計儀表板",

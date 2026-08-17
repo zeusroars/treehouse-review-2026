@@ -60,12 +60,13 @@
     "booting": "審査システムを起動中…",
     "bootHint": "10 秒以上かかる場合はページを再読み込みしてください",
     "backToGallery": "ギャラリーに戻る",
-    "navPhase1": "第1段階：ブラインド審査",
-    "navPhase2": "第2段階：決選ディスカッション",
-    "enterDay4Lounge": "Day 4 決選非同期ディスカッションへ"
+    "navPhase1": "Day1-2 · 第1段階：ブラインド審査",
+    "navPhase2": "Day3-4 · 第2段階：決選ディスカッション",
+    "navPhase3": "Day5 · 第3段階：決選ボード",
+    "enterDay4Lounge": "Day 3-4 決選非同期ディスカッションへ"
   },
   "preview": {
-    "brandTagline": "Retree · Treep · Forestay",
+    "brandTagline": "Treehouse Association of Taiwan",
     "competitionTitle": "2026 国際ツリーハウス設計コンペ",
     "adminMode": "管理者モード",
     "loadingFiles": "作品ファイルを読み込み中…",
@@ -130,9 +131,90 @@
     "constructability": "空間・構造の実現可能性"
   },
   "day4": {
+    "title": "決選非同期ディスカッション",
+    "subtitle": "決選16作品 · 6名審査員 Pin-up Lounge",
+    "phaseBadge": "Final Review · Day 3-4",
+    "gridLoading": "ピンアップウォールを準備中…",
+    "loadFailed": "Day 3-4 Lounge を読み込めません",
+    "updateFailed": "ディスカッションの更新に失敗しました",
+    "reload": "再読み込み",
+    "noPreview": "プレビューなし",
+    "pinupLabel": "Day 3-4 Pin-up Review",
+    "closePinup": "ピンアップを閉じる",
+    "noImage": "プレビュー画像がありません",
+    "noWorkTitle": "作品名が未入力です",
+    "noWorkConcept": "作品理念が未入力です",
+    "translatingEntry": "作品情報を翻訳中…",
+    "technicalAssessmentTitle": "技術評価",
+    "technicalAssessment": "構造安全性、材料耐久性、施工可能性、敷地への影響を共同確認してください。最終結論は大会技術チームがまとめます。",
+    "waitingForReview": "{name} のコメント待ち…",
+    "editNote": "コメントを編集",
+    "viewThread": "スレッドを見る",
+    "threadTitle": "{name} の付箋",
+    "closeThread": "スレッドを閉じる",
+    "noCoreComment": "まだ核心コメントがありません",
+    "updateCoreComment": "核心コメントを更新",
+    "replyTo": "{name} に返信",
+    "notePlaceholder": "簡潔なピンアップコメントを書く…",
+    "replyPlaceholder": "返信を追加…",
+    "submit": "送信",
     "translated": "翻訳済み",
     "translating": "コメントを翻訳中",
-    "originalText": "原文"
+    "originalText": "原文",
+    "prevEntry": "前へ",
+    "nextEntry": "次へ",
+    "entryCounter": "{current}/{total}",
+    "markShortlist": "準決勝候補にする",
+    "shortlistActive": "候補に追加済み",
+    "shortlistHint": "準決勝候補のマークを切り替え"
+  },
+  "day5": {
+    "title": "決選ボード",
+    "subtitle": "決選16作品をドラッグして配置 · 議長専用",
+    "boardLabel": "Day 5 Chairman Board",
+    "loading": "決選作品を読み込み中…",
+    "loadFailed": "Day 5 ボードを読み込めません",
+    "reload": "再読み込み",
+    "noPreview": "プレビューなし",
+    "dropHere": "ここにドロップ",
+    "markComplete": "この段階を完了",
+    "columnFull": "「{column}」は上限に達しています",
+    "top4Note": "最優秀賞は主催者が会後に決定",
+    "runDownTitle": "Day 5 決選会議ガイド",
+    "runDownSubtitle": "60分進行表 · 議長用スクリプト",
+    "columns": {
+      "pool": "候補プール",
+      "top4": "準決勝4",
+      "honorable": "佳作",
+      "eliminated": "未選出"
+    },
+    "runDown": {
+      "step1": {
+        "time": "00:00 – 05:00",
+        "title": "ルール確認",
+        "desc": "最優秀賞は技術条件に基づき主催者が準決勝4から決定することを説明。"
+      },
+      "step2": {
+        "time": "05:00 – 15:00",
+        "title": "淘汰フェーズ",
+        "desc": "Day 3-4 の星数が低い作品を確認し、2点を未選出へ移動。"
+      },
+      "step3": {
+        "time": "15:00 – 45:00",
+        "title": "準決勝争奪",
+        "desc": "Day 3-4 の高星作品を優先し、議論の上4点を準決勝へ。"
+      },
+      "step4": {
+        "time": "45:00 – 55:00",
+        "title": "佳作確認",
+        "desc": "残り10点を佳作エリアへ移動。"
+      },
+      "step5": {
+        "time": "55:00 – 60:00",
+        "title": "閉会",
+        "desc": "スクリーンショット保存、審査員への感謝、閉会。"
+      }
+    }
   },
   "adminDashboard": {
     "title": "決選統計ダッシュボード",

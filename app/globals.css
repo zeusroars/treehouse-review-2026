@@ -132,4 +132,19 @@
   .day4-modal-in {
     animation: day4-modal-enter 220ms ease-out both;
   }
+
+  @keyframes day4-pinup-switch {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .day4-pinup-switch {
+    animation: day4-pinup-switch 180ms ease-out both;
+  }
 }

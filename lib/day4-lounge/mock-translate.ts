@@ -1,3 +1,4 @@
+import { readJsonResponse } from "@/lib/safe-json-response";
 import type { Day4Language } from "@/types/day4-lounge";
 
 const cache = new Map<string, string>();
@@ -18,11 +19,11 @@ export async function fetchMockTranslation(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ text, source, target }),
   });
-  const data = (await response.json()) as {
+  const data = await readJsonResponse<{
     ok?: boolean;
     translation?: string;
     error?: string;
-  };
+  }>(response);
 
   if (!response.ok || !data.ok || !data.translation) {
     throw new Error(data.error ?? "Mock translation failed");

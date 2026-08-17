@@ -1,4 +1,5 @@
 import type { TranslateTarget } from "@/lib/translate/server";
+import { readJsonResponse } from "@/lib/safe-json-response";
 
 const clientCache = new Map<string, string>();
 
@@ -39,11 +40,11 @@ export async function fetchTranslatedTexts(
     }),
   });
 
-  const data = (await res.json()) as {
+  const data = await readJsonResponse<{
     ok?: boolean;
     translations?: string[];
     error?: string;
-  };
+  }>(res);
 
   if (!res.ok || !data.ok || !data.translations) {
     throw new Error(data.error ?? "Translation failed");
