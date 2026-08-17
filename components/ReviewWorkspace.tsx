@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import ConnectionErrorState from "@/components/ConnectionErrorState";
 import EmptyEntriesState from "@/components/EmptyEntriesState";
 import JudgeGate from "@/components/JudgeGate";
@@ -9,8 +11,8 @@ import EntryThumbnailStrip from "@/components/EntryThumbnailStrip";
 import PreviewPanel from "@/components/PreviewPanel";
 import ScoringPanel from "@/components/ScoringPanel";
 import { isConnectionError } from "@/lib/gas/connection-error";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
-  clearJudgeSession,
   fetchEntries,
   fetchEntryDetail,
   isAdminSession,
@@ -29,6 +31,7 @@ function firstEntryId(entries: ReviewEntrySummary[]): string | null {
 }
 
 export default function ReviewWorkspace() {
+  const { t } = useLanguage();
   const [session, setSession] = useState<JudgeSession | null>(null);
   const [sessionChecked, setSessionChecked] = useState(false);
 
@@ -178,14 +181,6 @@ export default function ReviewWorkspace() {
     });
   };
 
-  const handleSignOut = () => {
-    clearJudgeSession();
-    setSession(null);
-    setEntries([]);
-    setEntryDetail(null);
-    setActiveEntryId(null);
-  };
-
   if (!sessionChecked) {
     return null;
   }
@@ -200,7 +195,7 @@ export default function ReviewWorkspace() {
 
   if (listLoading && entries.length === 0 && !listConnectionError) {
     return (
-      <JudgeShell>
+      <JudgeShell showPhaseNav>
         <div className="flex flex-1 items-center justify-center py-20 text-sm text-slate-500">
           載入待審作品清單…
         </div>
@@ -210,38 +205,20 @@ export default function ReviewWorkspace() {
 
   if (listConnectionError) {
     return (
-      <JudgeShell>
+      <JudgeShell showPhaseNav>
         <ConnectionErrorState
           className="flex-1"
           retrying={listLoading}
           onRetry={() => void loadEntryList(session.judgeId, isAdmin, { force: true })}
         />
-        <div className="pb-8 text-center">
-          <button
-            type="button"
-            onClick={handleSignOut}
-            className="text-sm text-slate-400 underline"
-          >
-            返回登入
-          </button>
-        </div>
       </JudgeShell>
     );
   }
 
   if (entries.length === 0) {
     return (
-      <JudgeShell>
+      <JudgeShell showPhaseNav>
         <EmptyEntriesState className="flex-1" />
-        <div className="pb-8 text-center">
-          <button
-            type="button"
-            onClick={handleSignOut}
-            className="text-sm text-slate-400 underline"
-          >
-            返回登入
-          </button>
-        </div>
       </JudgeShell>
     );
   }
@@ -250,17 +227,17 @@ export default function ReviewWorkspace() {
 
   if (!isAdmin && (!hasPending || !activeSummary)) {
     return (
-      <JudgeShell>
-        <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 py-20">
-        <p className="text-lg font-light text-slate-700">所有作品皆已審查完畢</p>
-        <p className="text-sm text-slate-400">感謝您的評審，{session.judgeName}</p>
-        <button
-          type="button"
-          onClick={handleSignOut}
-          className="mt-4 text-sm text-sage-600 underline"
-        >
-          登出
-        </button>
+      <JudgeShell showPhaseNav>
+        <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 py-20">
+          <p className="text-lg font-light text-slate-700">所有作品皆已審查完畢</p>
+          <p className="text-sm text-slate-400">感謝您的評審，{session.judgeName}</p>
+          <Link
+            href="/judge/day4-lounge"
+            className="mt-2 inline-flex items-center gap-2 rounded-full bg-sage-600 px-6 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-sage-700"
+          >
+            {t("judge.enterDay4Lounge")}
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </JudgeShell>
     );
@@ -276,7 +253,7 @@ export default function ReviewWorkspace() {
     : Math.min(reviewedCount + 1, totalWorks);
 
   return (
-    <JudgeShell fill>
+    <JudgeShell fill showPhaseNav>
       <main className="flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row">
       <EntryThumbnailStrip
         entries={entries}
@@ -311,7 +288,6 @@ export default function ReviewWorkspace() {
         onGoPrev={() => goToEntryByOffset(-1)}
         onGoNext={() => goToEntryByOffset(1)}
         onScoreSubmitted={handleScoreSubmitted}
-        onSignOut={handleSignOut}
       />
       </main>
     </JudgeShell>

@@ -59,7 +59,10 @@
     "enter": "審査ワークスペースへ",
     "booting": "審査システムを起動中…",
     "bootHint": "10 秒以上かかる場合はページを再読み込みしてください",
-    "backToGallery": "ギャラリーに戻る"
+    "backToGallery": "ギャラリーに戻る",
+    "navPhase1": "第1段階：ブラインド審査",
+    "navPhase2": "第2段階：決選ディスカッション",
+    "enterDay4Lounge": "Day 4 決選非同期ディスカッションへ"
   },
   "preview": {
     "brandTagline": "Retree · Treep · Forestay",
@@ -125,6 +128,11 @@
     "concept": "デザインコンセプトと革新性",
     "sustainability": "環境持続性と構造ロジック",
     "constructability": "空間・構造の実現可能性"
+  },
+  "day4": {
+    "translated": "翻訳済み",
+    "translating": "コメントを翻訳中",
+    "originalText": "原文"
   },
   "adminDashboard": {
     "title": "決選統計ダッシュボード",

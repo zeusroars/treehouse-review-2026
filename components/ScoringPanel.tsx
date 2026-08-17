@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ChevronDown, ChevronLeft, ChevronRight, LayoutDashboard, LogOut, Send, Leaf, Shield } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, LayoutDashboard, Send, Leaf, Shield } from "lucide-react";
 import Link from "next/link";
 import ScoreSlider from "./ScoreSlider";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -33,7 +33,6 @@ interface ScoringPanelProps {
   onGoPrev?: () => void;
   onGoNext?: () => void;
   onScoreSubmitted: (nextEntryId?: string | null) => void;
-  onSignOut: () => void;
 }
 
 export default function ScoringPanel({
@@ -54,7 +53,6 @@ export default function ScoringPanel({
   onGoPrev,
   onGoNext,
   onScoreSubmitted,
-  onSignOut,
 }: ScoringPanelProps) {
   const { t } = useLanguage();
   const criteria = useMemo(() => getCriteriaForCategory(category), [category]);
@@ -137,14 +135,6 @@ export default function ScoringPanel({
                 {t("adminDashboard.shortLink")}
               </Link>
             ) : null}
-            <button
-              type="button"
-              onClick={onSignOut}
-              className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
-            >
-              <LogOut className="h-3.5 w-3.5" />
-              {t("scoring.signOut")}
-            </button>
           </div>
         </div>
         <div className="mt-2 flex items-baseline justify-between gap-2">

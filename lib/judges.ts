@@ -66,3 +66,10 @@ export function createJudgeSession(account: JudgeAccount) {
 export function listJudgeIds(): string[] {
   return getJudgeAccounts().map((account) => account.judgeId);
 }
+
+export function getJudgeDisplayName(judgeId: string): string {
+  return (
+    getJudgeAccounts().find((account) => account.judgeId === judgeId)
+      ?.judgeName ?? judgeId
+  );
+}

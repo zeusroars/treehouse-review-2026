@@ -59,7 +59,10 @@
     "enter": "進入審查工作區",
     "booting": "正在啟動審查系統…",
     "bootHint": "若停留超過 10 秒，請重新整理頁面",
-    "backToGallery": "返回大眾畫廊"
+    "backToGallery": "返回大眾畫廊",
+    "navPhase1": "第一階段：獨立盲審",
+    "navPhase2": "第二階段：決選討論區",
+    "enterDay4Lounge": "進入 Day 4 決選非同步討論區"
   },
   "preview": {
     "brandTagline": "Retree · Treep · Forestay",
@@ -125,6 +128,11 @@
     "concept": "設計概念與創新",
     "sustainability": "環境永續與結構邏輯",
     "constructability": "空間與構造可行性"
+  },
+  "day4": {
+    "translated": "已翻譯",
+    "translating": "正在翻譯留言",
+    "originalText": "原始語言內容"
   },
   "adminDashboard": {
     "title": "決選統計儀表板",

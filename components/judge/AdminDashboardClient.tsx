@@ -146,7 +146,7 @@ export default function AdminDashboardClient() {
 
   if (!authorized) {
     return (
-      <JudgeShell>
+      <JudgeShell showPhaseNav>
         <div className="flex min-h-[40vh] items-center justify-center text-slate-400">
           <Loader2 className="h-6 w-6 animate-spin" />
         </div>
@@ -155,7 +155,7 @@ export default function AdminDashboardClient() {
   }
 
   return (
-    <JudgeShell>
+    <JudgeShell showPhaseNav>
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
