@@ -99,14 +99,22 @@ export function parseVoteCountsPayload(data: unknown): Record<string, number> {
   return {};
 }
 
-/**
- * Fetch vote totals from GAS with ISR cache (revalidate every 60s).
- */
-export async function fetchVoteCountsFromGas(): Promise<Record<string, number>> {
+// ─── In-memory cache (works in both dev and prod) ────────────────────────────
+const VOTE_CACHE_FRESH_MS = VOTE_COUNTS_REVALIDATE_SECONDS * 1_000; // 60 s
+const VOTE_CACHE_STALE_MS = 10 * 60_000; // 10 min stale-while-revalidate
+
+interface VoteCache {
+  at: number;
+  counts: Record<string, number>;
+}
+
+let voteCache: VoteCache | null = null;
+let voteInflight: Promise<Record<string, number>> | null = null;
+
+async function fetchVoteCountsFromNetwork(): Promise<Record<string, number>> {
   const url = getGasVoteFetchUrl();
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 4_000);
-
   try {
     const data = await fetchGasJson<unknown>(url, {
       label: "GAS vote GET",
@@ -116,9 +124,66 @@ export async function fetchVoteCountsFromGas(): Promise<Record<string, number>> 
         signal: controller.signal,
       },
     });
-
     return parseVoteCountsPayload(data);
   } finally {
     clearTimeout(timer);
   }
+}
+
+function revalidateVotesInBackground(): void {
+  if (voteInflight) return;
+  voteInflight = (async () => {
+    try {
+      const counts = await fetchVoteCountsFromNetwork();
+      voteCache = { at: Date.now(), counts };
+      return counts;
+    } catch {
+      return voteCache?.counts ?? {};
+    } finally {
+      voteInflight = null;
+    }
+  })();
+}
+
+/**
+ * Fetch vote totals from GAS with in-memory stale-while-revalidate cache.
+ * Falls back gracefully when GAS is rate-limited or unreachable.
+ */
+export async function fetchVoteCountsFromGas(): Promise<Record<string, number>> {
+  const now = Date.now();
+  const age = voteCache ? now - voteCache.at : Infinity;
+
+  // FRESH — serve immediately
+  if (voteCache && age < VOTE_CACHE_FRESH_MS) {
+    return voteCache.counts;
+  }
+
+  // STALE — serve stale, refresh in background
+  if (voteCache && age < VOTE_CACHE_STALE_MS) {
+    revalidateVotesInBackground();
+    return voteCache.counts;
+  }
+
+  // EXPIRED / EMPTY — must fetch
+  if (voteInflight) return voteInflight;
+
+  voteInflight = (async () => {
+    try {
+      const counts = await fetchVoteCountsFromNetwork();
+      voteCache = { at: Date.now(), counts };
+      return counts;
+    } catch (e) {
+      if (voteCache) return voteCache.counts; // serve stale on error
+      throw e;
+    } finally {
+      voteInflight = null;
+    }
+  })();
+
+  return voteInflight;
+}
+
+export function clearVoteCountsCache(): void {
+  voteCache = null;
+  voteInflight = null;
 }
