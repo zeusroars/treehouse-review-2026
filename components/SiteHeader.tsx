@@ -67,28 +67,30 @@ function HeaderInlineSearch({
       className="relative hidden lg:flex"
     >
       <div
-        className={`flex items-center gap-2 rounded-full bg-white/70 px-3 py-1.5 ring-1 transition-all ${
+        className={`flex items-center gap-1.5 rounded-full bg-white/70 p-1 ring-1 transition-all ${
           errorMsg
             ? "ring-red-300"
             : "ring-slate-200/70 focus-within:ring-sage-400/70"
         }`}
       >
-        <Search className="h-3.5 w-3.5 shrink-0 text-sage-500" />
-        <input
-          ref={inputRef}
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={handleKey}
-          placeholder={t("gallery.jumpPlaceholder")}
-          className="w-40 bg-transparent text-xs text-slate-700 placeholder:text-slate-400 focus:w-56 focus:outline-none transition-[width] duration-200"
-          autoComplete="off"
-          spellCheck={false}
-        />
+        <span className="flex items-center gap-1.5 rounded-full px-2 py-1.5">
+          <Search className="h-3.5 w-3.5 shrink-0 text-sage-500" />
+          <input
+            ref={inputRef}
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={handleKey}
+            placeholder={t("gallery.jumpPlaceholder")}
+            className="w-36 bg-transparent text-xs leading-none text-slate-700 placeholder:text-slate-400 focus:w-52 focus:outline-none transition-[width] duration-200"
+            autoComplete="off"
+            spellCheck={false}
+          />
+        </span>
         {canJump && (
           <button
             type="submit"
-            className="shrink-0 rounded-full bg-sage-600 px-2 py-0.5 text-[10px] font-medium text-white transition hover:bg-sage-700"
+            className="shrink-0 rounded-full bg-sage-600 px-3 py-1.5 text-xs font-medium leading-none text-white transition hover:bg-sage-700"
           >
             {t("gallery.jumpGo")}
           </button>

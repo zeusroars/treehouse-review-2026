@@ -23,24 +23,31 @@ export default function LanguageSwitcher({ dark = false }: { dark?: boolean }) {
 
   return (
     <div ref={rootRef} className="relative">
-      <button
-        type="button"
-        onClick={() => setOpen((value) => !value)}
-        className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
-          dark
-            ? "bg-white/10 text-sage-100 ring-1 ring-white/15 hover:bg-white/15"
-            : "bg-white/80 text-slate-600 ring-1 ring-slate-200/80 hover:bg-white"
+      {/* Outer shell matches nav wrapper (p-1 + ring-1 rounded-full) */}
+      <div
+        className={`rounded-full p-1 ring-1 ${
+          dark ? "ring-white/15" : "ring-slate-200/70"
         }`}
-        aria-haspopup="listbox"
-        aria-expanded={open}
-        aria-label={t("language.label")}
       >
-        <Globe className="h-3.5 w-3.5 shrink-0 opacity-80" />
-        <span>{t(`language.${locale}`)}</span>
-        <ChevronDown
-          className={`h-3.5 w-3.5 opacity-60 transition-transform ${open ? "rotate-180" : ""}`}
-        />
-      </button>
+        <button
+          type="button"
+          onClick={() => setOpen((value) => !value)}
+          className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
+            dark
+              ? "bg-white/10 text-sage-100 hover:bg-white/15"
+              : "bg-white/80 text-slate-600 hover:bg-white"
+          }`}
+          aria-haspopup="listbox"
+          aria-expanded={open}
+          aria-label={t("language.label")}
+        >
+          <Globe className="h-3.5 w-3.5 shrink-0 opacity-80" />
+          <span>{t(`language.${locale}`)}</span>
+          <ChevronDown
+            className={`h-3.5 w-3.5 opacity-60 transition-transform ${open ? "rotate-180" : ""}`}
+          />
+        </button>
+      </div>
 
       {open ? (
         <ul
