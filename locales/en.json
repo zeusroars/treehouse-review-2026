@@ -34,6 +34,7 @@
     "voteNotOpen": "Voting is not open yet",
     "translating": "Translating descriptions…",
     "loadMore": "Load more",
+    "scrollProgress": "{current} / {total}",
     "showingCount": "Showing {visible} of {total}",
     "leaderboardTitle": "Popular Vote Leaderboard",
     "leaderboardSubtitle": "Top 3 entries by votes",
@@ -46,7 +47,14 @@
     "voteRulesItem3": "Violations: Automated bots, repeatedly clearing device records, or other improper vote manipulation are prohibited. Taiwan Treehouse Association may deduct abnormal votes without prior notice if detected by the system or manual review.",
     "voteRulesItem4": "Dream Guardians special note: Every entry carries a child's heartfelt effort. Some highly creative works were not drawn on the official template, yet the competition has chosen to showcase them in the gallery for popular voting. To preserve fairness, these entries will not advance to the expert final round. Every vote you cast is warm encouragement for the young creators!",
     "lightboxClose": "Close enlarged view",
-    "lightboxOpen": "View larger: {title}"
+    "lightboxOpen": "View larger: {title}",
+    "jumpOpen": "Jump to entry",
+    "jumpClose": "Close search",
+    "jumpPlaceholder": "Entry ID or title keyword…",
+    "jumpGo": "Go",
+    "jumpHint": "e.g. TH-2026-0011 or a title keyword",
+    "jumpNotFound": "No entry found for \"{query}\"",
+    "jumpNotVisible": "Found {entryId} but it hasn't loaded yet — tap Load More first"
   },
   "judge": {
     "pageTitle": "2026 International Treehouse Design Competition · Judge Portal",

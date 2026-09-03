@@ -6,6 +6,8 @@ import EmptyEntriesState from "@/components/EmptyEntriesState";
 import GalleryCard from "@/components/gallery/GalleryCard";
 import GalleryImageLightbox from "@/components/gallery/GalleryImageLightbox";
 import GalleryLeaderboard from "@/components/gallery/GalleryLeaderboard";
+import GalleryJumpSearch from "@/components/gallery/GalleryJumpSearch";
+import GalleryScrollProgress from "@/components/gallery/GalleryScrollProgress";
 import GalleryVoteRulesBanner from "@/components/gallery/GalleryVoteRulesBanner";
 import SiteHeader from "@/components/SiteHeader";
 import { VoteProvider } from "@/contexts/VoteContext";
@@ -255,17 +257,22 @@ export default function GalleryPageClient({
             ) : null}
 
             <div className="columns-1 gap-5 sm:columns-2 xl:columns-3">
-              {visibleEntries.map((entry) => (
-                <GalleryCard
-                  key={entry.entryId}
-                  entry={entry}
-                  displayTitle={displayText[entry.entryId]?.title}
-                  displayConcept={displayText[entry.entryId]?.concept}
-                  isTopTen={isTopTenByRank(voteRankMap.get(entry.entryId))}
-                  onVoteCountChange={handleVoteCountChange}
-                  onImageClick={handleOpenLightbox}
-                />
-              ))}
+              {visibleEntries.map((entry) => {
+                const listIndex =
+                  entries.findIndex((item) => item.entryId === entry.entryId) + 1;
+                return (
+                  <GalleryCard
+                    key={entry.entryId}
+                    entry={entry}
+                    listIndex={listIndex}
+                    displayTitle={displayText[entry.entryId]?.title}
+                    displayConcept={displayText[entry.entryId]?.concept}
+                    isTopTen={isTopTenByRank(voteRankMap.get(entry.entryId))}
+                    onVoteCountChange={handleVoteCountChange}
+                    onImageClick={handleOpenLightbox}
+                  />
+                );
+              })}
             </div>
 
             {hasMore ? (
@@ -286,6 +293,16 @@ export default function GalleryPageClient({
       <GalleryImageLightbox
         selection={selectedImage}
         onClose={handleCloseLightbox}
+      />
+
+      <GalleryScrollProgress
+        totalCount={entries.length}
+        enabled={!loading && !connectionError && entries.length > 0}
+      />
+
+      <GalleryJumpSearch
+        entries={entries}
+        enabled={!loading && !connectionError && entries.length > 0}
       />
     </div>
     </VoteProvider>

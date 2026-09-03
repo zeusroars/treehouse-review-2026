@@ -34,6 +34,7 @@
     "voteNotOpen": "投票功能尚未開放",
     "translating": "正在翻譯作品說明…",
     "loadMore": "載入更多作品",
+    "scrollProgress": "{current} / {total}",
     "showingCount": "目前顯示 {visible} / {total} 件",
     "leaderboardTitle": "人氣排行榜",
     "leaderboardSubtitle": "目前得票最高的 Top 3 作品",
@@ -46,7 +47,14 @@
     "voteRulesItem3": "違規處理：嚴禁使用自動化程式（機器人）、惡意頻繁清除設備紀錄，或透過不當外力操控票數。若經系統判定或人工查核有異常灌票之情事，主辦單位「台灣樹屋協會」有權直接扣除異常票數，不另行通知。",
     "voteRulesItem4": "守護夢想特別聲明：每一份創作都承載著孩子的心血。部分充滿創意的畫作雖未採用官方圖紙，大會仍決定讓它們在畫廊中閃閃發光，參與人氣票選。惟為兼顧賽制公平，此類作品將不進入後續的專家決選。您投出的每一票，都是對孩子最溫暖的鼓勵！",
     "lightboxClose": "關閉放大檢視",
-    "lightboxOpen": "放大檢視：{title}"
+    "lightboxOpen": "放大檢視：{title}",
+    "jumpOpen": "跳轉到作品",
+    "jumpClose": "關閉搜尋",
+    "jumpPlaceholder": "輸入作品編號或標題關鍵字…",
+    "jumpGo": "跳轉",
+    "jumpHint": "例如：TH-2026-0011 或「樹之家」",
+    "jumpNotFound": "找不到「{query}」，請確認編號或關鍵字",
+    "jumpNotVisible": "找到 {entryId}，但尚未載入 — 請先點擊「載入更多」"
   },
   "judge": {
     "pageTitle": "2026 國際樹屋設計競賽 · 評審專區",

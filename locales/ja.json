@@ -34,6 +34,7 @@
     "voteNotOpen": "投票機能はまだ公開されていません",
     "translating": "作品説明を翻訳中…",
     "loadMore": "さらに読み込む",
+    "scrollProgress": "{current} / {total}",
     "showingCount": "{visible} / {total} 件を表示中",
     "leaderboardTitle": "人気投票ランキング",
     "leaderboardSubtitle": "得票数 Top 3 の作品",
@@ -46,7 +47,14 @@
     "voteRulesItem3": "違反への対応：ボット等の自動化プログラム、端末記録の不正な削除、不正な票操作は禁止です。台湾ツリーハウス協会は、システムまたは人工審査で異常な票増加が確認された場合、事前通知なく票を差し引く権利を有します。",
     "voteRulesItem4": "夢を守る特別声明：すべての作品には子どもたちの想いが込められています。公式図面を使用していない独創的な作品も、大会はギャラリーで輝き、人気投票に参加できることとしました。ただし競技の公平性のため、この類の作品はその後の専門家による最終審査には進みません。あなたの一票一票が、子どもたちへの温かい励ましになります！",
     "lightboxClose": "拡大表示を閉じる",
-    "lightboxOpen": "拡大表示：{title}"
+    "lightboxOpen": "拡大表示：{title}",
+    "jumpOpen": "作品を検索",
+    "jumpClose": "検索を閉じる",
+    "jumpPlaceholder": "作品番号またはタイトルのキーワード…",
+    "jumpGo": "移動",
+    "jumpHint": "例：TH-2026-0011 またはキーワード",
+    "jumpNotFound": "「{query}」が見つかりませんでした",
+    "jumpNotVisible": "{entryId} は見つかりましたが未読み込みです — 「さらに読み込む」をタップしてください"
   },
   "judge": {
     "pageTitle": "2026 国際ツリーハウス設計コンペ · 審査員ポータル",

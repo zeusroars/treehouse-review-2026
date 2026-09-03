@@ -21,6 +21,7 @@ import type { GalleryEntryWithVotes, GalleryLightboxSelection } from "@/types/ga
 
 interface GalleryCardProps {
   entry: GalleryEntryWithVotes;
+  listIndex?: number;
   displayTitle?: string;
   displayConcept?: string;
   isTopTen?: boolean;
@@ -36,6 +37,7 @@ function excerpt(text: string, max = 160): string {
 
 export default function GalleryCard({
   entry,
+  listIndex,
   displayTitle,
   displayConcept,
   isTopTen = false,
@@ -163,7 +165,11 @@ export default function GalleryCard({
     "transition-transform duration-300 group-hover/image:scale-105";
 
   return (
-    <article className="group mb-5 break-inside-avoid overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200/70 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:ring-sage-200/80">
+    <article
+      className="group mb-5 break-inside-avoid overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200/70 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:ring-sage-200/80"
+      data-entry-id={entry.entryId}
+      {...(listIndex != null ? { "data-gallery-index": listIndex } : {})}
+    >
       <div className="relative overflow-hidden bg-slate-100">
         {hasThumbnail ? (
           <button
