@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  useCallback,
   useEffect,
   useRef,
   useState,
@@ -11,73 +10,37 @@ import {
 import { Search, X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { GalleryEntryWithVotes } from "@/types/gallery";
-
-const HIGHLIGHT_MS = 2000;
+import {
+  JUMP_HIGHLIGHT_CSS,
+  useGalleryJump,
+} from "@/lib/gallery/use-gallery-jump";
 
 interface GalleryJumpSearchProps {
   entries: GalleryEntryWithVotes[];
   enabled?: boolean;
-}
-
-function normalise(s: string) {
-  return s.replace(/\s+/g, "").toLowerCase();
-}
-
-function findEntry(
-  entries: GalleryEntryWithVotes[],
-  query: string
-): GalleryEntryWithVotes | null {
-  const q = normalise(query);
-  if (!q) return null;
-
-  // 1. Exact entryId match (case-insensitive, spaces stripped)
-  const exact = entries.find((e) => normalise(e.entryId) === q);
-  if (exact) return exact;
-
-  // 2. Partial entryId match (e.g. "0011" matches "TH-2026-0011")
-  const partial = entries.find((e) => normalise(e.entryId).includes(q));
-  if (partial) return partial;
-
-  // 3. Work title keyword match
-  const titled = entries.find(
-    (e) => e.workTitle && normalise(e.workTitle).includes(q)
-  );
-  if (titled) return titled;
-
-  return null;
-}
-
-function scrollToEntry(entryId: string): boolean {
-  const el = document.querySelector<HTMLElement>(
-    `[data-entry-id="${CSS.escape(entryId)}"]`
-  );
-  if (!el) return false;
-
-  const top =
-    el.getBoundingClientRect().top +
-    window.scrollY -
-    Math.max(80, window.innerHeight * 0.15);
-
-  window.scrollTo({ top, behavior: "smooth" });
-
-  // Highlight flash
-  el.dataset.jumpHighlight = "1";
-  setTimeout(() => {
-    delete el.dataset.jumpHighlight;
-  }, HIGHLIGHT_MS);
-
-  return true;
+  onExpandAll?: () => void;
 }
 
 export default function GalleryJumpSearch({
   entries,
   enabled = true,
+  onExpandAll,
 }: GalleryJumpSearchProps) {
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const { query, setQuery, errorMsg, jump } = useGalleryJump(
+    {
+      entries,
+      onExpandAll,
+      onSuccess: () => setOpen(false),
+    },
+    {
+      notFound: (q) => t("gallery.jumpNotFound", { query: q }),
+      notVisible: (id) => t("gallery.jumpNotVisible", { entryId: id }),
+    }
+  );
 
   // Auto-focus when opened
   useEffect(() => {
@@ -85,11 +48,10 @@ export default function GalleryJumpSearch({
       setTimeout(() => inputRef.current?.focus(), 60);
     } else {
       setQuery("");
-      setErrorMsg(null);
     }
-  }, [open]);
+  }, [open, setQuery]);
 
-  // Close on Escape key
+  // Close on Escape
   useEffect(() => {
     if (!open) return;
     const onKey = (e: globalThis.KeyboardEvent) => {
@@ -99,71 +61,40 @@ export default function GalleryJumpSearch({
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  const handleSubmit = useCallback(
-    (e?: FormEvent) => {
-      e?.preventDefault();
-      setErrorMsg(null);
-
-      const match = findEntry(entries, query);
-      if (!match) {
-        setErrorMsg(t("gallery.jumpNotFound", { query }));
-        return;
-      }
-
-      const found = scrollToEntry(match.entryId);
-      if (!found) {
-        // Entry exists in data but not yet rendered (load more needed)
-        setErrorMsg(t("gallery.jumpNotVisible", { entryId: match.entryId }));
-        return;
-      }
-
-      setOpen(false);
-    },
-    [entries, query, t]
-  );
+  const handleSubmit = (e?: FormEvent) => {
+    e?.preventDefault();
+    jump();
+  };
 
   const handleInputKey = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      handleSubmit();
+      jump();
     }
   };
 
+  // On desktop the header inline search handles it — hide FAB there
   if (!enabled) return null;
 
   return (
     <>
-      {/* Inject highlight style once */}
-      <style>{`
-        [data-entry-id][data-jump-highlight="1"] {
-          outline: 2px solid #4a9068;
-          outline-offset: 3px;
-          border-radius: 1rem;
-          transition: outline 0.2s;
-          animation: gallery-jump-pulse 0.5s ease-out 2;
-        }
-        @keyframes gallery-jump-pulse {
-          0%   { box-shadow: 0 0 0 0 rgba(74,144,104,0.45); }
-          70%  { box-shadow: 0 0 0 10px rgba(74,144,104,0); }
-          100% { box-shadow: 0 0 0 0 rgba(74,144,104,0); }
-        }
-      `}</style>
+      <style>{JUMP_HIGHLIGHT_CSS}</style>
 
-      {/* Collapsed: FAB button */}
+      {/* FAB — visible on mobile/tablet only (desktop uses header search) */}
       {!open && (
         <button
           type="button"
           onClick={() => setOpen(true)}
           aria-label={t("gallery.jumpOpen")}
-          className="fixed bottom-8 right-5 z-50 flex h-11 w-11 items-center justify-center rounded-full bg-white/80 shadow-lg ring-1 ring-slate-200/80 backdrop-blur-md transition hover:bg-white hover:ring-sage-300 sm:right-8"
+          className="fixed bottom-8 right-5 z-50 flex h-11 w-11 items-center justify-center rounded-full bg-white/80 shadow-lg ring-1 ring-slate-200/80 backdrop-blur-md transition hover:bg-white hover:ring-sage-300 sm:right-8 lg:hidden"
         >
           <Search className="h-4.5 w-4.5 text-slate-600" />
         </button>
       )}
 
-      {/* Expanded: input panel */}
+      {/* Expanded panel — visible on mobile/tablet only */}
       {open && (
-        <div className="fixed bottom-8 right-5 z-50 w-[min(88vw,22rem)] rounded-2xl bg-white/85 shadow-xl ring-1 ring-slate-200/80 backdrop-blur-md sm:right-8">
+        <div className="fixed bottom-8 right-5 z-50 w-[min(88vw,22rem)] rounded-2xl bg-white/85 shadow-xl ring-1 ring-slate-200/80 backdrop-blur-md sm:right-8 lg:hidden">
           <form onSubmit={handleSubmit} noValidate>
             <div className="flex items-center gap-2 px-4 py-3">
               <Search className="h-4 w-4 shrink-0 text-sage-600" />
@@ -171,10 +102,7 @@ export default function GalleryJumpSearch({
                 ref={inputRef}
                 type="text"
                 value={query}
-                onChange={(e) => {
-                  setQuery(e.target.value);
-                  setErrorMsg(null);
-                }}
+                onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleInputKey}
                 placeholder={t("gallery.jumpPlaceholder")}
                 className="min-w-0 flex-1 bg-transparent text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none"

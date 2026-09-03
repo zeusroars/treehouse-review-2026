@@ -214,7 +214,11 @@ export default function GalleryPageClient({
   return (
     <VoteProvider>
     <div className="min-h-screen bg-wood-50">
-      <SiteHeader variant="gallery" />
+      <SiteHeader
+        variant="gallery"
+        jumpEntries={entries}
+        onExpandAll={() => setVisibleCount(entries.length)}
+      />
 
       <main className="mx-auto max-w-7xl px-4 pb-16 pt-8 lg:px-8 lg:pt-10">
         <div className="mb-8 max-w-2xl">
@@ -303,6 +307,7 @@ export default function GalleryPageClient({
       <GalleryJumpSearch
         entries={entries}
         enabled={!loading && !connectionError && entries.length > 0}
+        onExpandAll={() => setVisibleCount(entries.length)}
       />
     </div>
     </VoteProvider>
