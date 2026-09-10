@@ -9,6 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useSession } from "next-auth/react";
 import { VOTE_QUOTA_MAX } from "@/lib/vote-api";
 import {
   getRemainingVotesLocal,
@@ -41,36 +42,39 @@ interface VoteContextValue {
 
 const VoteContext = createContext<VoteContextValue | null>(null);
 
-function readVoteState(quotaForced: boolean) {
-  const votesUsed = getVotesUsedCount();
-  const remainingVotes = getRemainingVotesLocal();
+function readVoteState(quotaForced: boolean, voterId?: string | null) {
+  const votesUsed = getVotesUsedCount(voterId);
+  const remainingVotes = getRemainingVotesLocal(voterId);
   const quotaExhausted =
-    quotaForced || isLocalQuotaExhausted() || remainingVotes <= 0;
+    quotaForced || isLocalQuotaExhausted(voterId) || remainingVotes <= 0;
   return {
     votesUsed,
     remainingVotes,
     quotaExhausted,
-    votedEntryIds: getVotedEntryIds(),
+    votedEntryIds: getVotedEntryIds(voterId),
   };
 }
 
 export function VoteProvider({ children }: { children: ReactNode }) {
+  const { data: session, status } = useSession();
+  const voterId = session?.voterId ?? null;
   const [quotaForced, setQuotaForced] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
   const [snapshot, setSnapshot] = useState(SSR_VOTE_SNAPSHOT);
 
   const refreshVoteState = useCallback(() => {
-    setSnapshot(readVoteState(quotaForced));
-  }, [quotaForced]);
+    setSnapshot(readVoteState(quotaForced, voterId));
+  }, [quotaForced, voterId]);
 
   useEffect(() => {
-    setSnapshot(readVoteState(false));
+    if (status === "loading") return;
+    setSnapshot(readVoteState(false, voterId));
     setIsHydrated(true);
-  }, []);
+  }, [status, voterId]);
 
   const recordVoteSuccess = useCallback(
     (entryId: string, remainingFromServer?: number) => {
-      markEntryAsVoted(entryId);
+      markEntryAsVoted(entryId, voterId);
       if (remainingFromServer !== undefined) {
         const exhausted = remainingFromServer <= 0;
         setQuotaForced(exhausted);
@@ -78,19 +82,19 @@ export function VoteProvider({ children }: { children: ReactNode }) {
           votesUsed: Math.max(0, VOTE_QUOTA_MAX - remainingFromServer),
           remainingVotes: Math.max(0, remainingFromServer),
           quotaExhausted: exhausted,
-          votedEntryIds: getVotedEntryIds(),
+          votedEntryIds: getVotedEntryIds(voterId),
         });
         return;
       }
-      setSnapshot(readVoteState(quotaForced));
+      setSnapshot(readVoteState(quotaForced, voterId));
     },
-    [quotaForced]
+    [quotaForced, voterId]
   );
 
   const markQuotaExhausted = useCallback(() => {
     setQuotaForced(true);
-    setSnapshot(readVoteState(true));
-  }, []);
+    setSnapshot(readVoteState(true, voterId));
+  }, [voterId]);
 
   const value = useMemo<VoteContextValue>(
     () => ({

@@ -1,28 +1,15 @@
 import { VOTE_QUOTA_MAX } from "@/lib/vote-api";
 
-const STORAGE_KEY = "treehouse-voter-id";
-const VOTED_KEY = "treehouse-voted-entries";
+const VOTED_KEY_PREFIX = "treehouse-voted-entries";
 
-function randomVoterId(): string {
-  if (typeof crypto !== "undefined" && crypto.randomUUID) {
-    return `voter_${crypto.randomUUID()}`;
-  }
-  return `voter_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+function votedStorageKey(voterId: string): string {
+  return `${VOTED_KEY_PREFIX}:${voterId}`;
 }
 
-export function getOrCreateVoterId(): string {
-  if (typeof window === "undefined") return "server_anonymous";
-  const existing = localStorage.getItem(STORAGE_KEY);
-  if (existing) return existing;
-  const id = randomVoterId();
-  localStorage.setItem(STORAGE_KEY, id);
-  return id;
-}
-
-export function getVotedEntryIds(): Set<string> {
-  if (typeof window === "undefined") return new Set();
+export function getVotedEntryIds(voterId?: string | null): Set<string> {
+  if (typeof window === "undefined" || !voterId) return new Set();
   try {
-    const raw = localStorage.getItem(VOTED_KEY);
+    const raw = localStorage.getItem(votedStorageKey(voterId));
     if (!raw) return new Set();
     const parsed = JSON.parse(raw) as unknown;
     if (!Array.isArray(parsed)) return new Set();
@@ -32,26 +19,26 @@ export function getVotedEntryIds(): Set<string> {
   }
 }
 
-export function getVotesUsedCount(): number {
-  return getVotedEntryIds().size;
+export function getVotesUsedCount(voterId?: string | null): number {
+  return getVotedEntryIds(voterId).size;
 }
 
-export function getRemainingVotesLocal(): number {
-  return Math.max(0, VOTE_QUOTA_MAX - getVotesUsedCount());
+export function getRemainingVotesLocal(voterId?: string | null): number {
+  return Math.max(0, VOTE_QUOTA_MAX - getVotesUsedCount(voterId));
 }
 
-export function isLocalQuotaExhausted(): boolean {
-  return getVotesUsedCount() >= VOTE_QUOTA_MAX;
+export function isLocalQuotaExhausted(voterId?: string | null): boolean {
+  return getVotesUsedCount(voterId) >= VOTE_QUOTA_MAX;
 }
 
-export function hasVotedForEntry(entryId: string): boolean {
-  return getVotedEntryIds().has(entryId);
+export function hasVotedForEntry(entryId: string, voterId?: string | null): boolean {
+  return getVotedEntryIds(voterId).has(entryId);
 }
 
-export function markEntryAsVoted(entryId: string): number {
-  if (typeof window === "undefined") return 0;
-  const voted = getVotedEntryIds();
+export function markEntryAsVoted(entryId: string, voterId?: string | null): number {
+  if (typeof window === "undefined" || !voterId) return 0;
+  const voted = getVotedEntryIds(voterId);
   voted.add(entryId);
-  localStorage.setItem(VOTED_KEY, JSON.stringify([...voted]));
+  localStorage.setItem(votedStorageKey(voterId), JSON.stringify([...voted]));
   return voted.size;
 }

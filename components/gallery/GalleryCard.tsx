@@ -5,13 +5,11 @@ import Image from "next/image";
 import { FileText, Flame, Heart, Loader2 } from "lucide-react";
 import RotatedContainImage from "@/components/RotatedContainImage";
 import { useCategoryLabel, useLanguage } from "@/contexts/LanguageContext";
+import { useSession, signIn } from "next-auth/react";
 import { useVoteQuota } from "@/contexts/VoteContext";
 import { formatVoteCount } from "@/lib/gallery-votes";
 import { showVoteErrorAlert, showVoteSuccessAlert } from "@/lib/vote-alerts";
-import {
-  getOrCreateVoterId,
-  getRemainingVotesLocal,
-} from "@/lib/voter-id";
+import { getRemainingVotesLocal } from "@/lib/voter-id";
 import {
   isQuotaExhaustedMessage,
   parseVoteApiResponse,
@@ -45,6 +43,7 @@ export default function GalleryCard({
   onImageClick,
 }: GalleryCardProps) {
   const { t, locale } = useLanguage();
+  const { data: session, status } = useSession();
   const categoryLabel = useCategoryLabel(entry.category);
   const {
     isHydrated,
@@ -66,9 +65,12 @@ export default function GalleryCard({
   const [voteCount, setVoteCount] = useState(entry.voteCount);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const hasVoted = isHydrated && votedEntryIds.has(entry.entryId);
-  const quotaLocked = isHydrated && quotaExhausted;
-  const voteDisabled = quotaLocked || hasVoted || isSubmitting;
+  const voterId = session?.voterId;
+  const isLoggedIn = status === "authenticated" && Boolean(voterId);
+  const hasVoted = isHydrated && isLoggedIn && votedEntryIds.has(entry.entryId);
+  const quotaLocked = isHydrated && isLoggedIn && quotaExhausted;
+  const voteDisabled =
+    isSubmitting || status === "loading" || (isLoggedIn && (quotaLocked || hasVoted));
 
   useEffect(() => {
     setVoteCount(entry.voteCount);
@@ -78,14 +80,21 @@ export default function GalleryCard({
 
   const buttonLabel = isSubmitting
     ? t("gallery.voteSubmitting")
-    : quotaLocked
-      ? t("gallery.votesExhausted")
-      : hasVoted
-        ? t("gallery.voted")
-        : t("gallery.vote");
+    : !isLoggedIn
+      ? t("gallery.loginToVote")
+      : quotaLocked
+        ? t("gallery.votesExhausted")
+        : hasVoted
+          ? t("gallery.voted")
+          : t("gallery.vote");
 
   const handleVote = useCallback(async () => {
     if (!isHydrated || voteDisabled) return;
+
+    if (status !== "authenticated" || !voterId) {
+      await signIn("line", { callbackUrl: window.location.href });
+      return;
+    }
 
     const previousCount = voteCount;
     const nextCount = previousCount + 1;
@@ -95,12 +104,12 @@ export default function GalleryCard({
     onVoteCountChange?.(entry.entryId, nextCount);
 
     try {
-      const res = await fetch("/api/vote/test", {
+      const res = await fetch("/api/vote", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           photoNo: entry.entryId,
-          voterId: getOrCreateVoterId(),
+          voterId,
         }),
       });
 
@@ -118,7 +127,7 @@ export default function GalleryCard({
       }
 
       const remaining =
-        result.remainingVotes ?? Math.max(0, getRemainingVotesLocal() - 1);
+        result.remainingVotes ?? Math.max(0, getRemainingVotesLocal(voterId) - 1);
       recordVoteSuccess(entry.entryId, remaining);
 
       await showVoteSuccessAlert(
@@ -139,6 +148,8 @@ export default function GalleryCard({
   }, [
     isHydrated,
     voteDisabled,
+    status,
+    voterId,
     voteCount,
     entry.entryId,
     onVoteCountChange,
