@@ -1,5 +1,9 @@
 import { ADMIN_JUDGE_ID } from "@/lib/admin";
 import { getCriteriaForCategory, weightedTotal } from "@/lib/criteria";
+import {
+  ADMIN_LIST_THUMB_WIDTH,
+  buildDriveThumbnailProxyUrl,
+} from "@/lib/drive-thumbnail";
 import { loadAllEntriesFromGas } from "@/lib/gas/entries-cache";
 import { readAllScores, type StoredScore } from "@/lib/scores/local-store";
 import type { AdminDashboardRow } from "@/types/review";
@@ -91,7 +95,10 @@ export async function buildAdminDashboardRows(): Promise<AdminDashboardRow[]> {
       entryId: entry.entryId,
       workTitle: entry.workTitle,
       category: entry.category,
-      thumbnailUrl: first?.type === "image" ? first.previewUrl : null,
+      thumbnailUrl:
+        first?.type === "image" && first.fileId
+          ? buildDriveThumbnailProxyUrl(first.fileId, ADMIN_LIST_THUMB_WIDTH)
+          : null,
       displayRotation: entry.displayRotation,
       scoreCompleted,
       scoreTotal: EXPECTED_JUDGE_COUNT,

@@ -2,6 +2,11 @@ import fs from "fs/promises";
 import path from "path";
 import { randomUUID } from "crypto";
 import { buildAdminDashboardRows } from "@/lib/admin-dashboard";
+import {
+  DAY4_LIST_THUMB_WIDTH,
+  DAY4_PINUP_WIDTH,
+  buildDriveThumbnailProxyUrl,
+} from "@/lib/drive-thumbnail";
 import { loadAllEntriesFromGas } from "@/lib/gas/entries-cache";
 import { getJudgeDisplayName, listJudgeIds } from "@/lib/judges";
 import type {
@@ -145,8 +150,11 @@ export async function listDay4LoungeEntries(): Promise<Day4LoungeEntry[]> {
       workTitle: detail?.workTitle ?? row.workTitle,
       workConcept,
       category: row.category,
+      thumbnailUrl: firstFile
+        ? buildDriveThumbnailProxyUrl(firstFile.fileId, DAY4_LIST_THUMB_WIDTH)
+        : row.thumbnailUrl,
       imageUrl: firstFile
-        ? `/api/review/image?fileId=${encodeURIComponent(firstFile.fileId)}&sz=1600`
+        ? buildDriveThumbnailProxyUrl(firstFile.fileId, DAY4_PINUP_WIDTH)
         : row.thumbnailUrl,
       displayRotation: row.displayRotation,
       scoreRank: row.scoreRank,

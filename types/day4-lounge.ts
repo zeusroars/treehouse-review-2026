@@ -24,6 +24,9 @@ export interface Day4LoungeEntry {
   workTitle?: string;
   workConcept?: string;
   category: string;
+  /** Grid / list card image (smaller). */
+  thumbnailUrl: string | null;
+  /** Pin-up / fullscreen image (higher res). */
   imageUrl: string | null;
   displayRotation?: number;
   scoreRank: number | null;

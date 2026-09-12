@@ -720,9 +720,9 @@ export default function Day4LoungeClient() {
                   onClick={() => setSelectedEntryId(entry.entryId)}
                   className="group relative aspect-[4/3] overflow-hidden border-[7px] border-white bg-slate-200 text-left shadow-[0_8px_24px_rgba(51,65,85,0.14)] transition duration-300 hover:-translate-y-1 hover:shadow-xl"
                 >
-                  {entry.imageUrl ? (
+                  {entry.thumbnailUrl || entry.imageUrl ? (
                     <RotatedContainImage
-                      src={entry.imageUrl}
+                      src={(entry.thumbnailUrl || entry.imageUrl)!}
                       alt={entry.entryId}
                       rotation={entry.displayRotation}
                       layout="fill"

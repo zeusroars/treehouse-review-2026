@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { listDay4LoungeEntries } from "@/lib/day4-lounge/store";
+import { DAY5_CARD_THUMB_WIDTH, resizeDriveImageProxyUrl } from "@/lib/drive-thumbnail";
 import { resolveStarCount } from "@/lib/day5-board/stars";
 import { isAdminJudgeId } from "@/lib/admin";
 
@@ -19,7 +20,10 @@ export async function GET(request: Request) {
       entries: entries.map((entry) => ({
         entryId: entry.entryId,
         workTitle: entry.workTitle,
-        imageUrl: entry.imageUrl,
+        imageUrl: resizeDriveImageProxyUrl(
+          entry.thumbnailUrl || entry.imageUrl,
+          DAY5_CARD_THUMB_WIDTH
+        ),
         displayRotation: entry.displayRotation,
         starCount: resolveStarCount(entry.entryId, entry.shortlistedBy),
       })),

@@ -19,7 +19,10 @@ import type {
   SubmitScoreResponse,
 } from "@/types/review";
 import { isJudgeVisibleReviewStatus } from "@/types/review";
-import { buildDriveThumbnailProxyUrl } from "@/lib/drive-thumbnail";
+import {
+  JUDGE_STRIP_THUMB_WIDTH,
+  buildDriveThumbnailProxyUrl,
+} from "@/lib/drive-thumbnail";
 import { fetchVoteCountsFromGas } from "@/lib/gas/fetch-vote-counts";
 import { mergeVoteCounts } from "@/lib/gallery-votes";
 import type { GalleryEntriesResponse, GalleryEntry } from "@/types/gallery";
@@ -87,7 +90,9 @@ export async function listEntries(judgeId: string): Promise<EntriesListResponse>
       category: e.category,
       reviewed: isAdmin ? false : reviewed.has(e.entryId),
       thumbnailUrl:
-        first?.type === "image" ? first.previewUrl : null,
+        first?.type === "image" && first.fileId
+          ? buildDriveThumbnailProxyUrl(first.fileId, JUDGE_STRIP_THUMB_WIDTH)
+          : null,
       thumbnailType: first?.type ?? null,
       displayRotation: e.displayRotation,
       reviewStatus: e.reviewStatus,
