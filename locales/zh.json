@@ -43,6 +43,7 @@
     "voteFailed": "投票失敗，請稍後再試",
     "voteSuccessTitle": "投票成功！",
     "voteSuccessRemaining": "您還剩 {count} 票",
+    "voteSuccessBrowseTip": "💡 小提醒：本次競賽共有 355 件精彩作品，建議您先將畫廊逛完，再將選票投給最心儀的設計喔！",
     "voteErrorTitle": "無法投票",
     "voteNotOpen": "投票功能尚未開放",
     "translating": "正在翻譯作品說明…",

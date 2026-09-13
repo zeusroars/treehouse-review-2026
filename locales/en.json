@@ -43,6 +43,7 @@
     "voteFailed": "Vote failed. Please try again.",
     "voteSuccessTitle": "Vote recorded!",
     "voteSuccessRemaining": "You have {count} vote(s) remaining",
+    "voteSuccessBrowseTip": "💡 Tip: There are 355 entries in this competition — browse the gallery first, then cast your votes for the designs you love most!",
     "voteErrorTitle": "Unable to vote",
     "voteNotOpen": "Voting is not open yet",
     "translating": "Translating descriptions…",

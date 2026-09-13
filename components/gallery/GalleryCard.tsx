@@ -132,7 +132,8 @@ export default function GalleryCard({
 
       await showVoteSuccessAlert(
         t("gallery.voteSuccessTitle"),
-        t("gallery.voteSuccessRemaining", { count: remaining })
+        t("gallery.voteSuccessRemaining", { count: remaining }),
+        remaining > 0 ? t("gallery.voteSuccessBrowseTip") : undefined
       );
     } catch (err) {
       setVoteCount(previousCount);

@@ -43,6 +43,7 @@
     "voteFailed": "投票に失敗しました。しばらくしてからお試しください。",
     "voteSuccessTitle": "投票しました！",
     "voteSuccessRemaining": "残り {count} 票",
+    "voteSuccessBrowseTip": "💡 ヒント：今回のコンテストには355点の作品があります。ギャラリーを一通り見てから、気に入ったデザインに投票しましょう！",
     "voteErrorTitle": "投票できません",
     "voteNotOpen": "投票機能はまだ公開されていません",
     "translating": "作品説明を翻訳中…",
