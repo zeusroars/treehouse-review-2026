@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { signIn } from "next-auth/react";
 import { X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -15,6 +16,11 @@ export default function GalleryLoginInterceptModal({
   onClose,
 }: GalleryLoginInterceptModalProps) {
   const { t } = useLanguage();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -36,11 +42,11 @@ export default function GalleryLoginInterceptModal({
     };
   }, [open, handleKeyDown]);
 
-  if (!open) return null;
+  if (!open || !mounted) return null;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-labelledby="gallery-login-intercept-title"
@@ -70,7 +76,11 @@ export default function GalleryLoginInterceptModal({
           {t("gallery.loginModalSecurityWarning")}
         </div>
 
-        <div className="mt-5 flex flex-col gap-2.5">
+        <p className="mt-4 rounded-xl border border-blue-100 bg-blue-50/80 px-3.5 py-3 text-sm leading-relaxed text-blue-600">
+          {t("gallery.loginModalMobileTip")}
+        </p>
+
+        <div className="mt-4 flex flex-col gap-2.5">
           <button
             type="button"
             onClick={() =>
@@ -89,6 +99,7 @@ export default function GalleryLoginInterceptModal({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

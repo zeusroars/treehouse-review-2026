@@ -33,6 +33,7 @@
     "loginToVote": "LINEでログインして投票",
     "loginModalTitle": "この作品に投票しますか？まずログインしてください",
     "loginModalSecurityWarning": "⚠️ 詐欺・セキュリティ注意：台湾ツリーハウス協会および本投票システムが、LINEログイン認証コードやパスワードをいかなる経路でもお伺いすることは絶対にありません。ログインはLINE公式の安全な仕組みで行われます。認証コードを他人に教えないでください。",
+    "loginModalMobileTip": "💡 スマホの方へ：画面遷移後にアプリが自動で開かない場合は、画面下部の「LINEアプリでログイン」をタップしてください。",
     "loginModalLineButton": "LINEでログイン",
     "loginModalCancel": "キャンセル",
     "loginModalClose": "閉じる",
