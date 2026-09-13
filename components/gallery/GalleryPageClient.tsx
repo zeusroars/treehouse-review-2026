@@ -279,14 +279,22 @@ export default function GalleryPageClient({
               })}
             </div>
 
-            {hasMore ? (
-              <div className="mt-10 flex justify-center">
+            {entries.length > 0 ? (
+              <div className="mt-10 flex justify-center pb-2">
                 <button
                   type="button"
                   onClick={handleLoadMore}
-                  className="rounded-full bg-white px-6 py-2.5 text-sm font-medium text-sage-700 shadow-sm ring-1 ring-slate-200/80 transition-colors hover:bg-sage-50"
+                  disabled={!hasMore}
+                  aria-disabled={!hasMore}
+                  className={
+                    hasMore
+                      ? "min-h-12 rounded-2xl bg-white px-8 py-3.5 text-sm font-semibold text-sage-800 shadow-md ring-1 ring-slate-200/90 transition hover:bg-sage-50 hover:shadow-lg active:translate-y-px active:bg-sage-100 active:shadow-sm sm:text-base"
+                      : "min-h-12 cursor-default rounded-2xl bg-slate-100 px-8 py-3.5 text-sm font-medium text-slate-400 shadow-none ring-1 ring-slate-200/60 sm:text-base"
+                  }
                 >
-                  {t("gallery.loadMore")}
+                  {hasMore
+                    ? t("gallery.loadMore")
+                    : t("gallery.loadMoreComplete")}
                 </button>
               </div>
             ) : null}
