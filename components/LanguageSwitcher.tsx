@@ -6,7 +6,14 @@ import { useLanguage, type Locale } from "@/contexts/LanguageContext";
 
 const LOCALES: Locale[] = ["zh", "en", "ja"];
 
-export default function LanguageSwitcher({ dark = false }: { dark?: boolean }) {
+export default function LanguageSwitcher({
+  dark = false,
+  dropdownPlacement = "down",
+}: {
+  dark?: boolean;
+  /** Open list upward (useful inside mobile hamburger panels). */
+  dropdownPlacement?: "down" | "up";
+}) {
   const { locale, setLocale, t } = useLanguage();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -21,9 +28,10 @@ export default function LanguageSwitcher({ dark = false }: { dark?: boolean }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const openUp = dropdownPlacement === "up";
+
   return (
-    <div ref={rootRef} className="relative">
-      {/* Outer shell matches nav wrapper (p-1 + ring-1 rounded-full) */}
+    <div ref={rootRef} className="relative z-[80]">
       <div
         className={`rounded-full p-1 ring-1 ${
           dark ? "ring-white/15" : "ring-slate-200/70"
@@ -44,7 +52,9 @@ export default function LanguageSwitcher({ dark = false }: { dark?: boolean }) {
           <Globe className="h-3.5 w-3.5 shrink-0 opacity-80" />
           <span>{t(`language.${locale}`)}</span>
           <ChevronDown
-            className={`h-3.5 w-3.5 opacity-60 transition-transform ${open ? "rotate-180" : ""}`}
+            className={`h-3.5 w-3.5 opacity-60 transition-transform ${
+              open ? (openUp ? "rotate-0" : "rotate-180") : openUp ? "rotate-180" : ""
+            }`}
           />
         </button>
       </div>
@@ -53,7 +63,9 @@ export default function LanguageSwitcher({ dark = false }: { dark?: boolean }) {
         <ul
           role="listbox"
           aria-label={t("language.label")}
-          className={`absolute right-0 z-50 mt-2 min-w-[9.5rem] overflow-hidden rounded-xl py-1 shadow-lg ring-1 ${
+          className={`absolute right-0 z-[90] min-w-[9.5rem] overflow-visible rounded-xl py-1 shadow-lg ring-1 ${
+            openUp ? "bottom-full mb-2" : "top-full mt-2"
+          } ${
             dark
               ? "bg-slate-900/95 text-white ring-white/10 backdrop-blur-md"
               : "bg-white text-slate-700 ring-slate-200/80"
@@ -69,7 +81,7 @@ export default function LanguageSwitcher({ dark = false }: { dark?: boolean }) {
                     setLocale(code);
                     setOpen(false);
                   }}
-                  className={`flex w-full items-center px-3 py-2 text-left text-xs transition-colors ${
+                  className={`flex w-full items-center px-3 py-2.5 text-left text-xs transition-colors ${
                     active
                       ? dark
                         ? "bg-sage-500/20 text-sage-200"

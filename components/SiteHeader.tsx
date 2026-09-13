@@ -248,7 +248,8 @@ export default function SiteHeader({
   const [menuOpen, setMenuOpen] = useState(false);
 
   const onGallery = pathname === "/";
-  const onJudge = pathname.startsWith("/judge");
+  // Phase rollout: judge nav hidden this week — restore with judge links below.
+  // const onJudge = pathname.startsWith("/judge");
   const showSearch = onGallery && !!jumpEntries?.length;
   const isLoggedIn = status === "authenticated" && Boolean(session?.user);
   const displayName =
@@ -312,9 +313,11 @@ export default function SiteHeader({
             <NavPillLink href="/" active={onGallery}>
               {t("gallery.navGallery")}
             </NavPillLink>
+            {/* Soft-launch: hide judge portal until next phase
             <NavPillLink href="/judge" active={onJudge}>
               {t("gallery.navJudge")}
             </NavPillLink>
+            */}
           </nav>
 
           <LanguageSwitcher />
@@ -339,8 +342,9 @@ export default function SiteHeader({
           menuOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
         }`}
       >
-        <div className="overflow-hidden">
-          <div className="space-y-4 border-t border-slate-200/50 px-4 py-4">
+        {/* overflow-hidden only while collapsing; visible when open so language dropdown can escape */}
+        <div className={menuOpen ? "min-h-0 overflow-visible" : "min-h-0 overflow-hidden"}>
+          <div className="space-y-5 border-t border-slate-200/50 px-4 py-5 pb-8">
             {isLoggedIn ? (
               <div className="flex items-center gap-3 rounded-2xl bg-white/80 px-3 py-3 ring-1 ring-slate-200/70">
                 <UserAvatar
@@ -359,6 +363,7 @@ export default function SiteHeader({
               </div>
             ) : null}
 
+            {/* Soft-launch / already on gallery: hide redundant gallery + judge mobile nav
             <nav className="flex flex-col gap-1">
               <Link
                 href="/"
@@ -383,12 +388,13 @@ export default function SiteHeader({
                 {t("gallery.navJudge")}
               </Link>
             </nav>
+            */}
 
-            <div className="flex items-center justify-between gap-3 rounded-xl bg-white/70 px-3 py-2 ring-1 ring-slate-200/70">
+            <div className="relative z-[70] flex items-center justify-between gap-3 rounded-xl bg-white/70 px-3 py-3 ring-1 ring-slate-200/70">
               <span className="text-xs font-medium text-slate-500">
                 {t("language.label")}
               </span>
-              <LanguageSwitcher />
+              <LanguageSwitcher dropdownPlacement="up" />
             </div>
 
             {isLoggedIn ? (
