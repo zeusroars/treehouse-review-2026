@@ -22,14 +22,17 @@ const siteUrl =
     ? `https://${process.env.VERCEL_URL}`
     : "http://localhost:3001");
 
+const siteTitle = "2026國際樹屋設計競賽(少兒組)";
+const siteDescription =
+  "歡迎參加 2026 國際樹屋競賽線上人氣票選！活動期間 9/15–9/30，前三名可獲飛牛牧場住宿券。由臺灣樹屋協會主辦。";
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "2026 國際樹屋設計競賽 · 線上人氣票選",
-    template: "%s · 2026 國際樹屋設計競賽",
+    default: siteTitle,
+    template: `%s · ${siteTitle}`,
   },
-  description:
-    "歡迎參加 2026 國際樹屋競賽線上人氣票選！活動期間 9/15–9/30，前三名可獲飛牛牧場住宿券。由臺灣樹屋協會主辦。",
+  description: siteDescription,
   icons: {
     icon: [{ url: "/favicon.png", type: "image/png" }],
     apple: [{ url: "/favicon.png", type: "image/png" }],
@@ -38,23 +41,21 @@ export const metadata: Metadata = {
     type: "website",
     locale: "zh_TW",
     siteName: "臺灣樹屋協會",
-    title: "2026 國際樹屋競賽（少兒組）線上人氣票選",
-    description:
-      "歡迎參加 2026 國際樹屋競賽線上人氣票選！活動期間 9/15–9/30，前三名可獲飛牛牧場住宿券。由臺灣樹屋協會主辦。",
+    title: siteTitle,
+    description: siteDescription,
     images: [
       {
         url: "/og.jpg",
         width: 536,
         height: 1024,
-        alt: "2026 國際樹屋競賽（少兒組）線上人氣票選",
+        alt: siteTitle,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "2026 國際樹屋競賽（少兒組）線上人氣票選",
-    description:
-      "歡迎參加 2026 國際樹屋競賽線上人氣票選！活動期間 9/15–9/30，前三名可獲飛牛牧場住宿券。",
+    title: siteTitle,
+    description: siteDescription,
     images: ["/og.jpg"],
   },
 };
