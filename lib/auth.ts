@@ -32,12 +32,26 @@ export const authOptions: NextAuthOptions = {
       if (account?.provider === "line") {
         const voterId = lineUserId(profile, account.providerAccountId);
         if (voterId) token.voterId = voterId;
+        if (profile && typeof profile === "object") {
+          const lineProfile = profile as {
+            name?: string;
+            picture?: string;
+          };
+          if (lineProfile.name) token.name = lineProfile.name;
+          if (lineProfile.picture) token.picture = lineProfile.picture;
+        }
       }
       return token;
     },
     async session({ session, token }) {
       if (typeof token.voterId === "string" && token.voterId) {
         session.voterId = token.voterId;
+      }
+      if (session.user) {
+        if (typeof token.name === "string") session.user.name = token.name;
+        if (typeof token.picture === "string") {
+          session.user.image = token.picture;
+        }
       }
       return session;
     },

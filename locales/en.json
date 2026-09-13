@@ -10,7 +10,13 @@
     "connectionErrorTitle": "Connection is a bit slow",
     "connectionErrorDescription": "Our cloud service is handling many requests right now. Please wait a few seconds and try again.",
     "connectionErrorRetry": "Retry",
-    "connectionErrorRetrying": "Retrying…"
+    "connectionErrorRetrying": "Retrying…",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "accountMenu": "Account menu",
+    "signOut": "Sign out",
+    "signedInUser": "Signed-in user",
+    "signedInWithLine": "Signed in with LINE"
   },
   "gallery": {
     "title": "2026 International Treehouse Design Competition · Gallery",
@@ -25,6 +31,11 @@
     "noConcept": "(No design statement)",
     "vote": "Vote",
     "loginToVote": "Sign in with LINE to vote",
+    "loginModalTitle": "Ready to vote for this entry? Please sign in first",
+    "loginModalSecurityWarning": "⚠️ Anti-scam & security notice: Taiwan Treehouse Association and this voting system will never ask you for a LINE login verification code or password through any channel. Sign-in uses LINE’s official secure flow — never share verification codes with anyone.",
+    "loginModalLineButton": "Sign in with LINE",
+    "loginModalCancel": "Cancel",
+    "loginModalClose": "Close",
     "voteSubmitting": "Processing…",
     "voted": "Voted",
     "votesExhausted": "No votes left",

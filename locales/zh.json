@@ -10,7 +10,13 @@
     "connectionErrorTitle": "連線遇到小塞車",
     "connectionErrorDescription": "雲端伺服器目前正在處理較多請求，請稍候幾秒鐘再試一次。",
     "connectionErrorRetry": "重新嘗試",
-    "connectionErrorRetrying": "重新連線中…"
+    "connectionErrorRetrying": "重新連線中…",
+    "openMenu": "開啟選單",
+    "closeMenu": "關閉選單",
+    "accountMenu": "帳號選單",
+    "signOut": "登出",
+    "signedInUser": "已登入使用者",
+    "signedInWithLine": "以 LINE 登入"
   },
   "gallery": {
     "title": "2026 國際樹屋設計競賽 · 線上畫廊",
@@ -25,6 +31,11 @@
     "noConcept": "（未提供設計理念）",
     "vote": "投給它",
     "loginToVote": "以 LINE 登入並投票",
+    "loginModalTitle": "準備投票給這件作品嗎？請先登入",
+    "loginModalSecurityWarning": "⚠️ 防詐騙與資安提醒：台灣樹屋協會與本票選系統絕對不會透過任何管道，主動向您索取 LINE 登入驗證碼或密碼。登入皆透過 LINE 官方安全機制進行，請切勿將驗證碼外洩給任何人。",
+    "loginModalLineButton": "使用 LINE 登入",
+    "loginModalCancel": "取消",
+    "loginModalClose": "關閉",
     "voteSubmitting": "處理中…",
     "voted": "已投票",
     "votesExhausted": "選票已用盡",

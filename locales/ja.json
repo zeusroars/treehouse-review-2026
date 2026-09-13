@@ -10,7 +10,13 @@
     "connectionErrorTitle": "接続が少し混み合っています",
     "connectionErrorDescription": "クラウドサーバーへのリクエストが集中しています。数秒お待ちいただいてから、もう一度お試しください。",
     "connectionErrorRetry": "再試行",
-    "connectionErrorRetrying": "再接続中…"
+    "connectionErrorRetrying": "再接続中…",
+    "openMenu": "メニューを開く",
+    "closeMenu": "メニューを閉じる",
+    "accountMenu": "アカウントメニュー",
+    "signOut": "ログアウト",
+    "signedInUser": "ログイン中のユーザー",
+    "signedInWithLine": "LINEでログイン中"
   },
   "gallery": {
     "title": "2026 国際ツリーハウス設計コンペ · ギャラリー",
@@ -25,6 +31,11 @@
     "noConcept": "（デザインコンセプトなし）",
     "vote": "投票する",
     "loginToVote": "LINEでログインして投票",
+    "loginModalTitle": "この作品に投票しますか？まずログインしてください",
+    "loginModalSecurityWarning": "⚠️ 詐欺・セキュリティ注意：台湾ツリーハウス協会および本投票システムが、LINEログイン認証コードやパスワードをいかなる経路でもお伺いすることは絶対にありません。ログインはLINE公式の安全な仕組みで行われます。認証コードを他人に教えないでください。",
+    "loginModalLineButton": "LINEでログイン",
+    "loginModalCancel": "キャンセル",
+    "loginModalClose": "閉じる",
     "voteSubmitting": "処理中…",
     "voted": "投票済み",
     "votesExhausted": "投票枠を使い切りました",

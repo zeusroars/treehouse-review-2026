@@ -5,7 +5,7 @@ import Image from "next/image";
 import { FileText, Flame, Heart, Loader2 } from "lucide-react";
 import RotatedContainImage from "@/components/RotatedContainImage";
 import { useCategoryLabel, useLanguage } from "@/contexts/LanguageContext";
-import { useSession, signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useVoteQuota } from "@/contexts/VoteContext";
 import { formatVoteCount } from "@/lib/gallery-votes";
 import { showVoteErrorAlert, showVoteSuccessAlert } from "@/lib/vote-alerts";
@@ -15,6 +15,7 @@ import {
   parseVoteApiResponse,
 } from "@/lib/vote-api";
 import { GALLERY_THUMB_WIDTH, buildDriveFullImageProxyUrl } from "@/lib/drive-thumbnail";
+import GalleryLoginInterceptModal from "@/components/gallery/GalleryLoginInterceptModal";
 import type { GalleryEntryWithVotes, GalleryLightboxSelection } from "@/types/gallery";
 
 interface GalleryCardProps {
@@ -64,6 +65,7 @@ export default function GalleryCard({
 
   const [voteCount, setVoteCount] = useState(entry.voteCount);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const voterId = session?.voterId;
   const isLoggedIn = status === "authenticated" && Boolean(voterId);
@@ -80,19 +82,17 @@ export default function GalleryCard({
 
   const buttonLabel = isSubmitting
     ? t("gallery.voteSubmitting")
-    : !isLoggedIn
-      ? t("gallery.loginToVote")
-      : quotaLocked
-        ? t("gallery.votesExhausted")
-        : hasVoted
-          ? t("gallery.voted")
-          : t("gallery.vote");
+    : quotaLocked
+      ? t("gallery.votesExhausted")
+      : hasVoted
+        ? t("gallery.voted")
+        : t("gallery.vote");
 
   const handleVote = useCallback(async () => {
     if (!isHydrated || voteDisabled) return;
 
     if (status !== "authenticated" || !voterId) {
-      await signIn("line", { callbackUrl: window.location.href });
+      setShowLoginModal(true);
       return;
     }
 
@@ -261,6 +261,11 @@ export default function GalleryCard({
           </span>
         </button>
       </div>
+
+      <GalleryLoginInterceptModal
+        open={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+      />
     </article>
   );
 }
