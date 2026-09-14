@@ -78,6 +78,7 @@ export default function GalleryImageLightbox({
               src={imageUrl}
               alt={title}
               fill
+              unoptimized
               priority
               sizes="100vw"
               className="object-contain"

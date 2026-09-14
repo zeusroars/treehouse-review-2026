@@ -203,6 +203,7 @@ export default function GalleryCard({
                 alt={title}
                 width={GALLERY_THUMB_WIDTH}
                 height={GALLERY_THUMB_WIDTH}
+                unoptimized
                 priority={false}
                 loading="lazy"
                 sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"

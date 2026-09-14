@@ -71,6 +71,7 @@ function LeaderboardCard({
               alt={title}
               width={GALLERY_THUMB_WIDTH}
               height={GALLERY_THUMB_WIDTH}
+              unoptimized
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
             />
           )
