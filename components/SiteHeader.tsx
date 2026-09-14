@@ -293,12 +293,25 @@ export default function SiteHeader({
 
       <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 md:gap-4 md:py-4 lg:px-8">
         <div className="min-w-0 flex-1">
-          <p className="truncate text-[10px] font-medium uppercase tracking-[0.2em] text-sage-500">
-            {t("preview.brandTagline")}
-          </p>
-          <h1 className="truncate text-base font-light tracking-wide text-slate-800 sm:text-lg lg:text-xl">
-            {variant === "judge" ? t("judge.pageTitle") : t("gallery.title")}
-          </h1>
+          <a
+            href="https://3housetw.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex max-w-full items-center rounded-md outline-none transition hover:opacity-90 focus-visible:ring-2 focus-visible:ring-sage-400"
+            aria-label={t("preview.brandTagline")}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/tat-logo.png"
+              alt={t("preview.brandTagline")}
+              className="h-9 w-auto max-w-[min(100%,220px)] rounded-md object-contain object-left sm:h-10 sm:max-w-[260px] lg:h-11 lg:max-w-[300px]"
+            />
+          </a>
+          {variant === "judge" ? (
+            <h1 className="mt-1 truncate text-sm font-light tracking-wide text-slate-700 sm:text-base">
+              {t("judge.pageTitle")}
+            </h1>
+          ) : null}
         </div>
 
         <div className="hidden shrink-0 items-center gap-2 md:flex">

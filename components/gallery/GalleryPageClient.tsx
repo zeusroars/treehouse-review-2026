@@ -222,7 +222,13 @@ export default function GalleryPageClient({
 
       <main className="mx-auto max-w-7xl px-4 pb-16 pt-8 lg:px-8 lg:pt-10">
         <div className="mb-8 max-w-2xl">
-          <p className="text-sm leading-relaxed text-slate-600">
+          <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-sage-500">
+            {t("preview.brandTagline")}
+          </p>
+          <h1 className="mt-1.5 text-xl font-light tracking-wide text-slate-800 sm:text-2xl">
+            {t("gallery.title")}
+          </h1>
+          <p className="mt-3 text-sm leading-relaxed text-slate-600">
             {t("gallery.subtitle")}
           </p>
           {!loading && entries.length > 0 ? (
