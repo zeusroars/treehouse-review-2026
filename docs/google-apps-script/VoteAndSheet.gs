@@ -9,6 +9,8 @@
 
 const FORM_SPREADSHEET_ID = "1z-u7Q_4O4k_E0KnHEH-6e4yaeRk5JOgjo_KC-Sm1CrY";
 const VOTE_SHEET_NAME = "投票紀錄"; // photoNo | voterId | timestamp
+// voterId: bare LINE Login sub (e.g. "Uxxxx…") or "google:…" for Google Login.
+// GAS stores the string as-is; do not strip provider prefixes on Google IDs.
 
 function json_(data) {
   return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(
@@ -56,7 +58,9 @@ function handleVoteCounts_() {
   return json_({ status: "success", data: counts });
 }
 
-/** POST body: { photoNo, voterId } */
+/** POST body: { photoNo, voterId }
+ *  voterId is an opaque string: bare LINE sub, or "google:sub" for Google.
+ */
 function handleVoteSubmit_(body) {
   var photoNo = String(body.photoNo || "").trim();
   var voterId = String(body.voterId || "").trim();

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Noto_Sans_TC, Inter } from "next/font/google";
 import Providers from "@/components/Providers";
+import { isGoogleLoginConfigured } from "@/lib/auth";
+import { LOGIN_MODE_COOKIE, parseLoginMode } from "@/lib/login-mode";
 import "./globals.css";
 
 const inter = Inter({
@@ -60,15 +63,25 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const loginMode = parseLoginMode(
+    cookieStore.get(LOGIN_MODE_COOKIE)?.value
+  );
+
   return (
     <html lang="zh-TW" className={`${inter.variable} ${notoSansTC.variable}`}>
       <body className="font-[family-name:var(--font-noto-sans-tc),var(--font-inter),sans-serif]">
-        <Providers>{children}</Providers>
+        <Providers
+          loginMode={loginMode}
+          googleLoginConfigured={isGoogleLoginConfigured()}
+        >
+          {children}
+        </Providers>
       </body>
     </html>
   );

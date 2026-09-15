@@ -35,6 +35,7 @@
     "loginModalSecurityWarning": "⚠️ Anti-scam & security notice: Taiwan Treehouse Association and this voting system will never ask you for a LINE login verification code or password through any channel. Sign-in uses LINE’s official secure flow — never share verification codes with anyone.",
     "loginModalMobileTip": "💡 Mobile tip: If the LINE app does not open automatically after redirect, tap “Log in with the LINE app” at the bottom of the screen.",
     "loginModalLineButton": "Sign in with LINE",
+    "loginModalGoogleButton": "Sign in with Google",
     "loginModalCancel": "Cancel",
     "loginModalClose": "Close",
     "voteSubmitting": "Processing…",

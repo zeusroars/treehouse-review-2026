@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { signIn } from "next-auth/react";
 import { X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useLoginMode } from "@/contexts/LoginModeContext";
 
 interface GalleryLoginInterceptModalProps {
   open: boolean;
@@ -16,6 +17,7 @@ export default function GalleryLoginInterceptModal({
   onClose,
 }: GalleryLoginInterceptModalProps) {
   const { t } = useLanguage();
+  const { allowGoogleLogin } = useLoginMode();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -90,6 +92,17 @@ export default function GalleryLoginInterceptModal({
           >
             {t("gallery.loginModalLineButton")}
           </button>
+          {allowGoogleLogin ? (
+            <button
+              type="button"
+              onClick={() =>
+                void signIn("google", { callbackUrl: window.location.href })
+              }
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-50"
+            >
+              {t("gallery.loginModalGoogleButton")}
+            </button>
+          ) : null}
           <button
             type="button"
             onClick={onClose}

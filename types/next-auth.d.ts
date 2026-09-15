@@ -3,7 +3,7 @@ import "next-auth/jwt";
 
 declare module "next-auth" {
   interface Session {
-    /** LINE Login `sub` — stable voter identity sent to GAS. */
+    /** Stable voter identity for GAS: bare LINE `sub`, or `google:{sub}`. */
     voterId?: string;
     user?: DefaultSession["user"];
   }

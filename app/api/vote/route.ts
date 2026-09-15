@@ -3,14 +3,14 @@ import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
 import { submitVoteToGas } from "@/lib/gas/submit-vote";
 
-/** Authenticated vote proxy. voterId always comes from the LINE session, never the client body. */
+/** Authenticated vote proxy. voterId always comes from the session (never the client body). */
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
     const voterId = session?.voterId?.trim();
     if (!voterId) {
       return NextResponse.json(
-        { ok: false, status: "error", message: "請先以 LINE 登入後再投票" },
+        { ok: false, status: "error", message: "請先登入後再投票" },
         { status: 401 }
       );
     }
